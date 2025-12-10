@@ -1071,8 +1071,14 @@
         const CONFIG_KEY = 'ipc-consulting-hub-v2';
         
         let config = {
-            clients: [],  // { name, sheetId, color }
-            team: []      // { name, role }
+            clients: [
+                { name: 'Treehouse Therapies', sheetId: '1JE6ngi9t8oNKPqZ3I_NjrC90WCdkmVNr', color: '#4A90A4' },
+                { name: 'In Reach Therapy', sheetId: '1Pp-brDjxPdstNGEnQOOuWa90flXL72tw', color: '#6B8E23' }
+            ],
+            team: [
+                { name: 'Alayna', role: 'CEO / Operations Lead' },
+                { name: 'Emily', role: 'Operations Partner' }
+            ]
         };
 
         let state = {
@@ -1094,7 +1100,11 @@
         function loadConfig() {
             const stored = localStorage.getItem(CONFIG_KEY);
             if (stored) {
-                config = JSON.parse(stored);
+                const parsed = JSON.parse(stored);
+                // Only use stored config if it has clients
+                if (parsed.clients && parsed.clients.length > 0) {
+                    config = parsed;
+                }
             }
         }
 
