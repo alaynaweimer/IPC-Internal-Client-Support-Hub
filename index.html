@@ -1070,7 +1070,7 @@
         
         const CONFIG_KEY = 'ipc-consulting-hub-v2';
         
-        let config = {
+        const DEFAULT_CONFIG = {
             clients: [
                 { name: 'Treehouse Therapies', sheetId: '1JE6ngi9t8oNKPqZ3I_NjrC90WCdkmVNr', color: '#4A90A4' },
                 { name: 'In Reach Therapy', sheetId: '1Pp-brDjxPdstNGEnQOOuWa90flXL72tw', color: '#6B8E23' }
@@ -1080,6 +1080,8 @@
                 { name: 'Emily', role: 'Operations Partner' }
             ]
         };
+        
+        let config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 
         let state = {
             clients: [],           // Loaded client data
@@ -1098,14 +1100,8 @@
         });
 
         function loadConfig() {
-            const stored = localStorage.getItem(CONFIG_KEY);
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                // Only use stored config if it has clients
-                if (parsed.clients && parsed.clients.length > 0) {
-                    config = parsed;
-                }
-            }
+            // Always use hardcoded DEFAULT_CONFIG - skip localStorage
+            config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
         }
 
         function saveConfig() {
