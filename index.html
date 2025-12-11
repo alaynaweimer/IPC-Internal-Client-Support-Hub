@@ -919,41 +919,9 @@
                     <span id="status-text">Not connected</span>
                 </div>
                 <button class="btn-icon" onclick="refreshAll()" title="Refresh">↻</button>
-                <button class="btn btn-secondary" onclick="toggleSetup()">⚙️ Setup</button>
+                <button class="btn btn-secondary" onclick="loadAllClients()">↻</button>
             </div>
         </header>
-
-        <!-- Setup Panel -->
-        <div class="setup-panel" id="setup-panel">
-            <div class="setup-tabs">
-                <button class="setup-tab active" onclick="switchSetupTab('clients')">Client Sheets</button>
-                <button class="setup-tab" onclick="switchSetupTab('team')">Team Members</button>
-            </div>
-
-            <!-- Clients Tab -->
-            <div class="setup-content active" id="setup-clients">
-                <div class="setup-section-title">📊 Client Google Sheets</div>
-                <p class="setup-description">Add each client's Google Sheet ID. Each sheet needs tabs: Programs, Tasks, Team.</p>
-                
-                <div class="clients-config" id="clients-config"></div>
-                <button class="add-btn" onclick="addClientRow()">+ Add Client</button>
-            </div>
-
-            <!-- Team Tab -->
-            <div class="setup-content" id="setup-team">
-                <div class="setup-section-title">👥 Team Members</div>
-                <p class="setup-description">Add team members who work across clients. They'll appear in the "Viewing as" dropdown.</p>
-                
-                <div class="team-config" id="team-config"></div>
-                <button class="add-btn" onclick="addTeamRow()">+ Add Team Member</button>
-            </div>
-
-            <div class="setup-actions">
-                <button class="btn btn-primary" onclick="saveAndConnect()">💾 Save & Connect All</button>
-                <button class="btn btn-secondary" onclick="loadDemoData()">📋 Load Demo</button>
-                <button class="btn btn-secondary" onclick="exportConfig()">📤 Export Config</button>
-            </div>
-        </div>
 
         <!-- Dashboard Content (hidden until connected) -->
         <div id="dashboard-content" style="display: none;">
@@ -1057,9 +1025,8 @@
 
         <!-- Welcome State -->
         <div class="welcome-state" id="welcome-state">
-            <h2>Welcome to IPC Consulting Hub</h2>
-            <p>Connect your client Google Sheets to see all projects in one place.</p>
-            <button class="btn btn-primary" onclick="toggleSetup()">⚙️ Get Started</button>
+            <h2>Loading...</h2>
+            <p>Connecting to client Google Sheets...</p>
         </div>
     </div>
 
@@ -1093,11 +1060,14 @@
         // Init
         document.addEventListener('DOMContentLoaded', () => {
             loadConfig();
-            renderSetupUI();
+            loadAllClients();
+        });
+        
+        function loadAllClients() {
             if (config.clients.length > 0) {
                 connectAllClients();
             }
-        });
+        }
 
         function loadConfig() {
             // Always use hardcoded DEFAULT_CONFIG - skip localStorage
