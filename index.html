@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPC + IEF Operations Hub</title>
+    <title>IPC Consulting Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -36,23 +36,10 @@
             line-height: 1.6;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(212,168,83,0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(52,211,153,0.02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
         .container {
             max-width: 1900px;
             margin: 0 auto;
             padding: 1.25rem 1.75rem;
-            position: relative;
-            z-index: 1;
         }
 
         /* Header */
@@ -60,58 +47,71 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .header-brand {
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
         }
-
-        .logo-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--bg-primary);
-        }
-
-        .logo.ipc { background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber)); }
-        .logo.ief { background: linear-gradient(135deg, var(--accent-teal), var(--accent-emerald)); }
 
         .header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-teal) 100%);
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-violet));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .header-subtitle {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
+        }
+
+        /* Team Member Selector */
+        .team-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-accent);
+        }
+
+        .team-selector-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .team-selector select {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 5px;
+            color: var(--accent-gold);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.35rem 0.6rem;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
         }
 
         .connection-status {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.7rem;
+            gap: 0.4rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
+            margin-right: 0.5rem;
         }
 
         .status-dot {
@@ -122,26 +122,19 @@
         }
 
         .status-dot.connected { background: var(--accent-emerald); }
+        .status-dot.partial { background: var(--accent-amber); }
         .status-dot.error { background: var(--accent-rose); }
 
-        .header-actions {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
         .btn {
-            padding: 0.5rem 1rem;
+            padding: 0.45rem 0.85rem;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
             border: none;
             display: flex;
             align-items: center;
-            gap: 0.35rem;
-            text-decoration: none;
+            gap: 0.3rem;
         }
 
         .btn-primary {
@@ -156,12 +149,13 @@
         }
 
         .btn-icon {
-            padding: 0.5rem;
+            padding: 0.4rem 0.5rem;
             background: var(--bg-elevated);
             border: 1px solid var(--border-subtle);
-            border-radius: 6px;
+            border-radius: 5px;
             color: var(--text-secondary);
             cursor: pointer;
+            font-size: 0.8rem;
         }
 
         /* Setup Panel */
@@ -176,33 +170,70 @@
 
         .setup-panel.active { display: block; }
 
-        .setup-panel h2 {
-            font-size: 1.1rem;
+        .setup-tabs {
+            display: flex;
+            gap: 0.5rem;
             margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 0.75rem;
+        }
+
+        .setup-tab {
+            padding: 0.4rem 0.8rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .setup-tab.active {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        .setup-content { display: none; }
+        .setup-content.active { display: block; }
+
+        .setup-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
             color: var(--accent-gold);
+            margin-bottom: 0.75rem;
         }
 
-        .form-group {
+        .setup-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             margin-bottom: 1rem;
         }
 
-        .form-label {
-            display: block;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-bottom: 0.3rem;
-            text-transform: uppercase;
+        .clients-config {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .client-config-row {
+            display: grid;
+            grid-template-columns: 180px 1fr 90px auto;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
         }
 
         .form-input {
-            width: 100%;
-            max-width: 500px;
-            padding: 0.6rem 0.85rem;
-            background: var(--bg-secondary);
+            padding: 0.45rem 0.65rem;
+            background: var(--bg-primary);
             border: 1px solid var(--border-subtle);
-            border-radius: 6px;
+            border-radius: 5px;
             color: var(--text-primary);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-family: 'DM Sans', sans-serif;
         }
 
@@ -211,99 +242,151 @@
             border-color: var(--accent-gold);
         }
 
-        .setup-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
+        .color-input {
+            width: 100%;
+            height: 30px;
+            padding: 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
-        /* Entity Tabs */
-        .entity-tabs {
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--accent-rose);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .add-btn {
+            background: transparent;
+            border: 1px dashed var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .add-btn:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .team-config {
             display: flex;
+            flex-direction: column;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
 
-        .entity-tab {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid var(--border-subtle);
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            transition: all 0.2s ease;
-        }
-
-        .entity-tab:hover { border-color: var(--accent-gold); }
-
-        .entity-tab.active.ipc {
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            color: var(--bg-primary);
-            border-color: transparent;
-        }
-
-        .entity-tab.active.ief {
-            background: linear-gradient(135deg, var(--accent-teal), var(--accent-emerald));
-            color: var(--bg-primary);
-            border-color: transparent;
-        }
-
-        .entity-tab.active.all {
-            background: linear-gradient(135deg, var(--accent-violet), var(--accent-sky));
-            color: var(--bg-primary);
-            border-color: transparent;
-        }
-
-        /* Filter Bar */
-        .filter-bar {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-            flex-wrap: wrap;
+        .team-config-row {
+            display: grid;
+            grid-template-columns: 150px 200px auto;
+            gap: 0.5rem;
             align-items: center;
+            padding: 0.4rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
         }
 
-        .filter-group {
+        .setup-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        /* Quick Stats Bar */
+        .quick-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .quick-stat {
             display: flex;
             align-items: center;
             gap: 0.4rem;
         }
 
-        .filter-label {
+        .quick-stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .quick-stat-label {
             font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .quick-stat.gold .quick-stat-value { color: var(--accent-gold); }
+        .quick-stat.emerald .quick-stat-value { color: var(--accent-emerald); }
+        .quick-stat.rose .quick-stat-value { color: var(--accent-rose); }
+        .quick-stat.sky .quick-stat-value { color: var(--accent-sky); }
+        .quick-stat.amber .quick-stat-value { color: var(--accent-amber); }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0.6rem 0.85rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .filter-label {
+            font-size: 0.6rem;
             color: var(--text-muted);
             text-transform: uppercase;
         }
 
         .filter-select {
-            padding: 0.4rem 0.6rem;
-            background: var(--bg-card);
+            padding: 0.35rem 0.5rem;
+            background: var(--bg-secondary);
             border: 1px solid var(--border-subtle);
-            border-radius: 5px;
+            border-radius: 4px;
             color: var(--text-primary);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-family: 'DM Sans', sans-serif;
             cursor: pointer;
-            min-width: 130px;
+            min-width: 120px;
         }
 
         .search-box {
             flex: 1;
-            min-width: 180px;
-            max-width: 250px;
+            min-width: 150px;
+            max-width: 200px;
             position: relative;
         }
 
         .search-box input {
             width: 100%;
-            padding: 0.4rem 0.6rem 0.4rem 1.75rem;
-            background: var(--bg-card);
+            padding: 0.35rem 0.5rem 0.35rem 1.6rem;
+            background: var(--bg-secondary);
             border: 1px solid var(--border-subtle);
-            border-radius: 5px;
+            border-radius: 4px;
             color: var(--text-primary);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
         .search-box::before {
@@ -312,33 +395,34 @@
             left: 0.5rem;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             opacity: 0.5;
         }
 
         .clear-filters {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--accent-gold);
             background: none;
             border: none;
             cursor: pointer;
+            margin-left: auto;
         }
 
         /* View Tabs */
         .view-tabs {
             display: flex;
-            gap: 0.2rem;
+            gap: 0.15rem;
             background: var(--bg-card);
-            padding: 0.2rem;
+            padding: 0.15rem;
             border-radius: 6px;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             width: fit-content;
         }
 
         .view-tab {
-            padding: 0.4rem 0.85rem;
+            padding: 0.4rem 0.75rem;
             border-radius: 5px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
             color: var(--text-secondary);
             background: transparent;
@@ -353,163 +437,59 @@
             color: var(--bg-primary);
         }
 
-        /* Metrics Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .metric-card {
-            background: var(--bg-card);
-            border-radius: 8px;
-            padding: 0.85rem;
-            border: 1px solid var(--border-subtle);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .metric-card:hover {
-            border-color: var(--border-accent);
-            transform: translateY(-2px);
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-        }
-
-        .metric-card.gold::before { background: var(--accent-gold); }
-        .metric-card.emerald::before { background: var(--accent-emerald); }
-        .metric-card.rose::before { background: var(--accent-rose); }
-        .metric-card.sky::before { background: var(--accent-sky); }
-        .metric-card.violet::before { background: var(--accent-violet); }
-        .metric-card.amber::before { background: var(--accent-amber); }
-        .metric-card.teal::before { background: var(--accent-teal); }
-
-        .metric-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            color: var(--text-muted);
-            margin-bottom: 0.2rem;
-        }
-
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .metric-card.gold .metric-value { color: var(--accent-gold); }
-        .metric-card.emerald .metric-value { color: var(--accent-emerald); }
-        .metric-card.rose .metric-value { color: var(--accent-rose); }
-        .metric-card.sky .metric-value { color: var(--accent-sky); }
-        .metric-card.violet .metric-value { color: var(--accent-violet); }
-        .metric-card.amber .metric-value { color: var(--accent-amber); }
-        .metric-card.teal .metric-value { color: var(--accent-teal); }
-
-        .metric-sub {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
-
         /* Main Layout */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 1.25rem;
+            grid-template-columns: 1fr 300px;
+            gap: 1rem;
         }
 
-        /* Program Cards */
-        .programs-grid {
+        /* Content Area */
+        .content-area {
+            min-height: 400px;
+        }
+
+        /* Cards */
+        .cards-grid {
             display: grid;
-            gap: 0.85rem;
+            gap: 0.75rem;
         }
 
-        .program-card {
+        .card {
             background: var(--bg-card);
             border-radius: 10px;
             border: 1px solid var(--border-subtle);
             overflow: hidden;
-            transition: all 0.2s ease;
         }
 
-        .program-card:hover {
-            border-color: var(--border-accent);
-        }
-
-        .program-card.entity-ipc { border-left: 3px solid var(--accent-gold); }
-        .program-card.entity-ief { border-left: 3px solid var(--accent-teal); }
-
-        .program-header {
-            padding: 0.85rem 1rem;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 0.75rem;
+        .card-header {
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .program-title-section h3 {
-            font-size: 0.95rem;
+        .card-title {
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 0.2rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
 
-        .entity-badge {
+        .client-badge {
             font-size: 0.55rem;
-            padding: 0.15rem 0.4rem;
+            padding: 0.12rem 0.4rem;
             border-radius: 3px;
             font-weight: 600;
-            text-transform: uppercase;
         }
 
-        .entity-badge.ipc { background: rgba(212,168,83,0.2); color: var(--accent-gold); }
-        .entity-badge.ief { background: rgba(45,212,191,0.2); color: var(--accent-teal); }
-
-        .program-lead {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .program-meta {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .meta-item {
-            text-align: center;
-        }
-
-        .meta-value {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--accent-gold);
-        }
-
-        .meta-label {
-            font-size: 0.55rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .program-status {
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.55rem;
+        .status-badge {
+            padding: 0.15rem 0.45rem;
+            border-radius: 10px;
+            font-size: 0.5rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -520,113 +500,65 @@
         .status-completed { background: rgba(56,189,248,0.15); color: var(--accent-sky); }
         .status-on-hold { background: rgba(251,191,36,0.15); color: var(--accent-amber); }
 
-        .program-progress-bar {
-            height: 3px;
-            background: var(--bg-secondary);
+        .card-meta {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
         }
 
-        .program-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-emerald));
+        .meta-item {
+            text-align: center;
         }
 
-        .program-body {
+        .meta-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .meta-label {
+            font-size: 0.5rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .expand-icon {
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .card-body {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
 
-        .program-card.expanded .program-body {
-            max-height: 2000px;
+        .card.expanded .card-body {
+            max-height: 1000px;
         }
 
-        .program-details {
-            padding: 0.85rem 1rem;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-subtle);
+        .card-tasks {
+            padding: 0.65rem 0.85rem;
         }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-        }
-
-        .detail-item label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 0.1rem;
-        }
-
-        .detail-item span {
-            font-size: 0.75rem;
-            color: var(--text-primary);
-        }
-
-        .team-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-top: 0.6rem;
-        }
-
-        .team-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.2rem 0.45rem;
-            background: var(--bg-elevated);
-            border-radius: 12px;
-            font-size: 0.65rem;
-        }
-
-        .avatar {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.45rem;
-            font-weight: 600;
-            color: var(--bg-primary);
-        }
-
-        .tasks-section {
-            padding: 0.85rem 1rem;
-        }
-
-        .tasks-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
-        }
-
-        .tasks-header h4 {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .task-count {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
+        /* Task Items */
         .task-item {
             display: flex;
-            align-items: center;
-            gap: 0.55rem;
+            align-items: flex-start;
+            gap: 0.5rem;
             padding: 0.5rem 0.6rem;
             background: var(--bg-secondary);
-            border-radius: 6px;
+            border-radius: 5px;
             margin-bottom: 0.35rem;
-            border-left: 3px solid transparent;
+            border-left: 3px solid var(--accent-gold);
         }
 
+        .task-item.overdue { border-left-color: var(--accent-rose); }
         .task-item.priority-high { border-left-color: var(--accent-rose); }
         .task-item.priority-medium { border-left-color: var(--accent-amber); }
         .task-item.priority-low { border-left-color: var(--accent-emerald); }
@@ -636,11 +568,8 @@
             height: 14px;
             border: 2px solid var(--text-muted);
             border-radius: 3px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             flex-shrink: 0;
+            margin-top: 2px;
         }
 
         .task-checkbox.completed {
@@ -648,17 +577,24 @@
             border-color: var(--accent-emerald);
         }
 
-        .task-checkbox.completed::after {
-            content: '✓';
-            color: var(--bg-primary);
-            font-size: 0.5rem;
-            font-weight: bold;
-        }
-
         .task-content { flex: 1; min-width: 0; }
 
+        .task-client {
+            font-size: 0.5rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            margin-bottom: 0.1rem;
+            display: inline-block;
+        }
+
+        .task-project {
+            font-size: 0.55rem;
+            color: var(--accent-gold);
+            margin-bottom: 0.1rem;
+        }
+
         .task-title {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
         }
 
@@ -670,100 +606,86 @@
         .task-meta {
             display: flex;
             gap: 0.5rem;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--text-muted);
+            margin-top: 0.15rem;
         }
 
         .task-due.overdue { color: var(--accent-rose); font-weight: 600; }
         .task-due.soon { color: var(--accent-amber); }
 
-        .expand-icon {
-            color: var(--text-muted);
-            transition: transform 0.3s ease;
-        }
-
-        .program-card.expanded .expand-icon {
-            transform: rotate(180deg);
-        }
-
-        /* Lead View */
-        .lead-grid {
+        /* Person Cards */
+        .person-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 0.85rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 0.75rem;
         }
 
-        .lead-card {
+        .person-card {
             background: var(--bg-card);
             border-radius: 10px;
             border: 1px solid var(--border-subtle);
             overflow: hidden;
         }
 
-        .lead-header {
-            padding: 0.85rem 1rem;
+        .person-header {
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.6rem;
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .lead-avatar {
-            width: 40px;
-            height: 40px;
+        .person-avatar {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--bg-primary);
         }
 
-        .lead-info h3 {
-            font-size: 0.9rem;
+        .person-info h3 {
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
-        .lead-role {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
+        .person-role {
+            font-size: 0.6rem;
+            color: var(--text-muted);
         }
 
-        .lead-stats {
+        .person-stats {
             display: flex;
-            gap: 0.65rem;
+            gap: 0.5rem;
             margin-left: auto;
         }
 
-        .lead-stat {
+        .person-stat {
             text-align: center;
         }
 
-        .lead-stat-value {
-            font-size: 1rem;
+        .person-stat-value {
+            font-size: 0.95rem;
             font-weight: 700;
         }
 
-        .lead-stat-label {
-            font-size: 0.55rem;
+        .person-stat-label {
+            font-size: 0.5rem;
             color: var(--text-muted);
             text-transform: uppercase;
         }
 
-        .lead-tasks {
-            padding: 0.65rem 0.85rem;
-            max-height: 300px;
+        .person-tasks {
+            padding: 0.6rem 0.75rem;
+            max-height: 280px;
             overflow-y: auto;
         }
 
-        .lead-task-program {
-            font-size: 0.6rem;
-            color: var(--accent-gold);
-            margin-bottom: 0.1rem;
-        }
-
-        /* Timeline View */
+        /* Timeline */
         .timeline-view {
             background: var(--bg-card);
             border-radius: 10px;
@@ -776,69 +698,65 @@
         }
 
         .timeline-month-header {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--accent-gold);
-            margin-bottom: 0.6rem;
-            padding-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.3rem;
             border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .timeline-day {
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-day-header {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
         }
 
         .timeline-item {
             display: flex;
             align-items: center;
-            gap: 0.55rem;
-            padding: 0.4rem 0.55rem;
+            gap: 0.5rem;
+            padding: 0.35rem 0.5rem;
             background: var(--bg-secondary);
-            border-radius: 5px;
-            font-size: 0.7rem;
-            margin-bottom: 0.3rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            margin-bottom: 0.2rem;
         }
-
-        .timeline-item-date {
-            font-weight: 600;
-            color: var(--accent-gold);
-            min-width: 35px;
-        }
-
-        .timeline-item-entity {
-            font-size: 0.55rem;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-        }
-
-        .timeline-item-entity.ipc { background: rgba(212,168,83,0.2); color: var(--accent-gold); }
-        .timeline-item-entity.ief { background: rgba(45,212,191,0.2); color: var(--accent-teal); }
 
         /* Sidebar */
         .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 0.75rem;
         }
 
         .sidebar-card {
             background: var(--bg-card);
             border-radius: 10px;
             border: 1px solid var(--border-subtle);
-            padding: 1rem;
+            padding: 0.85rem;
         }
 
         .sidebar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.6rem;
         }
 
         .sidebar-header h3 {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
         .sidebar-badge {
-            font-size: 0.6rem;
-            padding: 0.15rem 0.4rem;
+            font-size: 0.55rem;
+            padding: 0.1rem 0.35rem;
             background: var(--accent-rose);
             color: white;
             border-radius: 8px;
@@ -846,8 +764,8 @@
 
         .deadline-item {
             display: flex;
-            gap: 0.55rem;
-            padding: 0.45rem 0;
+            gap: 0.5rem;
+            padding: 0.4rem 0;
             border-bottom: 1px solid var(--border-subtle);
         }
 
@@ -855,18 +773,18 @@
 
         .deadline-date {
             text-align: right;
-            min-width: 35px;
+            min-width: 28px;
         }
 
         .deadline-day {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             font-family: 'Playfair Display', serif;
             color: var(--accent-gold);
         }
 
         .deadline-month {
-            font-size: 0.55rem;
+            font-size: 0.45rem;
             color: var(--text-muted);
             text-transform: uppercase;
         }
@@ -874,32 +792,32 @@
         .deadline-content { flex: 1; }
 
         .deadline-task {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 500;
-            margin-bottom: 0.1rem;
         }
 
         .deadline-meta {
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             color: var(--text-muted);
         }
 
         .deadline-item.overdue .deadline-day { color: var(--accent-rose); }
 
-        .workload-item {
+        /* Client Health */
+        .health-item {
             display: flex;
             align-items: center;
-            gap: 0.55rem;
+            gap: 0.5rem;
             padding: 0.4rem 0;
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .workload-item:last-child { border-bottom: none; }
+        .health-item:last-child { border-bottom: none; }
 
-        .workload-avatar {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
+        .health-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -908,65 +826,27 @@
             color: var(--bg-primary);
         }
 
-        .workload-info { flex: 1; }
+        .health-info { flex: 1; }
 
-        .workload-name {
+        .health-name {
             font-size: 0.7rem;
             font-weight: 500;
         }
 
-        .workload-tasks {
-            font-size: 0.6rem;
+        .health-status {
+            font-size: 0.55rem;
             color: var(--text-muted);
         }
 
-        .workload-bar {
-            width: 45px;
-            height: 4px;
-            background: var(--bg-elevated);
-            border-radius: 2px;
-            overflow: hidden;
+        .health-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
         }
 
-        .workload-fill {
-            height: 100%;
-            border-radius: 2px;
-        }
-
-        .workload-fill.low { background: var(--accent-emerald); }
-        .workload-fill.medium { background: var(--accent-amber); }
-        .workload-fill.high { background: var(--accent-rose); }
-
-        /* Entity Summary */
-        .entity-summary {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .entity-summary-card {
-            padding: 0.6rem 0.75rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .entity-summary-card.ipc { border-color: rgba(212,168,83,0.3); }
-        .entity-summary-card.ief { border-color: rgba(45,212,191,0.3); }
-
-        .entity-summary-label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .entity-summary-value {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .entity-summary-card.ipc .entity-summary-value { color: var(--accent-gold); }
-        .entity-summary-card.ief .entity-summary-value { color: var(--accent-teal); }
+        .health-indicator.good { background: var(--accent-emerald); }
+        .health-indicator.warning { background: var(--accent-amber); }
+        .health-indicator.critical { background: var(--accent-rose); }
 
         /* Empty State */
         .empty-state {
@@ -981,23 +861,39 @@
             opacity: 0.5;
         }
 
+        /* Welcome State */
+        .welcome-state {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-state h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-state p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
         /* Responsive */
-        @media (max-width: 1400px) {
+        @media (max-width: 1200px) {
             .main-layout { grid-template-columns: 1fr; }
             .sidebar { display: grid; grid-template-columns: repeat(2, 1fr); }
         }
 
-        @media (max-width: 900px) {
-            .metrics-grid { grid-template-columns: repeat(4, 1fr); }
-            .sidebar { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 600px) {
-            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .header-left { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
             .filter-bar { flex-direction: column; align-items: stretch; }
+            .sidebar { grid-template-columns: 1fr; }
+            .client-config-row { grid-template-columns: 1fr; }
         }
 
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
     </style>
@@ -1005,14 +901,16 @@
 <body>
     <div class="container">
         <header class="header">
-            <div class="header-brand">
-                <div class="logo-group">
-                    <div class="logo ipc">IPC</div>
-                    <div class="logo ief">IEF</div>
-                </div>
+            <div class="header-left">
                 <div>
-                    <h1>Operations Hub</h1>
-                    <p class="header-subtitle">Ignite Positive Changes + IEF Fractional Services</p>
+                    <h1>🎯 IPC Consulting Hub</h1>
+                    <p class="header-subtitle">Ignite Positive Changes • All Clients Dashboard</p>
+                </div>
+                <div class="team-selector">
+                    <span class="team-selector-label">Viewing as:</span>
+                    <select id="team-member-select" onchange="switchTeamMember()">
+                        <option value="all">Everyone (All Tasks)</option>
+                    </select>
                 </div>
             </div>
             <div class="header-actions">
@@ -1020,207 +918,398 @@
                     <span class="status-dot" id="status-dot"></span>
                     <span id="status-text">Not connected</span>
                 </div>
-                <button class="btn-icon" onclick="refreshData()" title="Refresh">↻</button>
+                <button class="btn-icon" onclick="refreshAll()" title="Refresh">↻</button>
                 <button class="btn btn-secondary" onclick="toggleSetup()">⚙️ Setup</button>
-                <a class="btn btn-primary" id="sheet-link" href="#" target="_blank" style="display: none;">📊 Sheet</a>
             </div>
         </header>
 
         <!-- Setup Panel -->
         <div class="setup-panel" id="setup-panel">
-            <h2>📊 Connect Google Sheet</h2>
-            <div class="form-group">
-                <label class="form-label">Google Sheet ID</label>
-                <input type="text" class="form-input" id="sheet-id-input" placeholder="Your IPC+IEF Master Sheet ID">
+            <div class="setup-tabs">
+                <button class="setup-tab active" onclick="switchSetupTab('clients')">Client Sheets</button>
+                <button class="setup-tab" onclick="switchSetupTab('team')">Team Members</button>
             </div>
-            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: -0.5rem;">
-                Sheet needs tabs: Programs, Tasks, Team. Programs should have "Entity" column (IPC or IEF).
-            </p>
+
+            <!-- Clients Tab -->
+            <div class="setup-content active" id="setup-clients">
+                <div class="setup-section-title">📊 Client Google Sheets</div>
+                <p class="setup-description">Add each client's Google Sheet ID. Each sheet needs tabs: Programs, Tasks, Team.</p>
+                
+                <div class="clients-config" id="clients-config"></div>
+                <button class="add-btn" onclick="addClientRow()">+ Add Client</button>
+            </div>
+
+            <!-- Team Tab -->
+            <div class="setup-content" id="setup-team">
+                <div class="setup-section-title">👥 Team Members</div>
+                <p class="setup-description">Add team members who work across clients. They'll appear in the "Viewing as" dropdown.</p>
+                
+                <div class="team-config" id="team-config"></div>
+                <button class="add-btn" onclick="addTeamRow()">+ Add Team Member</button>
+            </div>
+
             <div class="setup-actions">
-                <button class="btn btn-primary" onclick="connectSheet()">Connect</button>
-                <button class="btn btn-secondary" onclick="loadDemoData()">Load Demo</button>
+                <button class="btn btn-primary" onclick="saveAndConnect()">💾 Save & Connect All</button>
+                <button class="btn btn-secondary" onclick="loadDemoData()">📋 Load Demo</button>
+                <button class="btn btn-secondary" onclick="exportConfig()">📤 Export Config</button>
             </div>
         </div>
 
-        <!-- Entity Tabs -->
-        <div class="entity-tabs" id="entity-tabs" style="display: none;">
-            <button class="entity-tab active all" data-entity="all" onclick="filterEntity('all')">All Projects</button>
-            <button class="entity-tab ipc" data-entity="ipc" onclick="filterEntity('ipc')">IPC</button>
-            <button class="entity-tab ief" data-entity="ief" onclick="filterEntity('ief')">IEF</button>
-        </div>
-
-        <!-- Filter Bar -->
-        <div class="filter-bar" id="filter-bar" style="display: none;">
-            <div class="filter-group">
-                <span class="filter-label">Project</span>
-                <select class="filter-select" id="filter-program" onchange="applyFilters()">
-                    <option value="">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Lead</span>
-                <select class="filter-select" id="filter-lead" onchange="applyFilters()">
-                    <option value="">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Assignee</span>
-                <select class="filter-select" id="filter-assignee" onchange="applyFilters()">
-                    <option value="">All</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Status</span>
-                <select class="filter-select" id="filter-status" onchange="applyFilters()">
-                    <option value="">All</option>
-                    <option value="planning">Planning</option>
-                    <option value="on-track">On Track</option>
-                    <option value="at-risk">At Risk</option>
-                    <option value="on-hold">On Hold</option>
-                    <option value="completed">Completed</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <span class="filter-label">Due</span>
-                <select class="filter-select" id="filter-due" onchange="applyFilters()">
-                    <option value="">Any</option>
-                    <option value="overdue">Overdue</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                </select>
-            </div>
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Search..." oninput="applyFilters()">
-            </div>
-            <button class="clear-filters" onclick="clearFilters()">Clear</button>
-        </div>
-
-        <!-- View Tabs -->
-        <div class="view-tabs" id="view-tabs" style="display: none;">
-            <button class="view-tab active" data-view="projects" onclick="switchView('projects')">By Project</button>
-            <button class="view-tab" data-view="leads" onclick="switchView('leads')">By Lead</button>
-            <button class="view-tab" data-view="assignees" onclick="switchView('assignees')">By Assignee</button>
-            <button class="view-tab" data-view="tasks" onclick="switchView('tasks')">All Tasks</button>
-            <button class="view-tab" data-view="timeline" onclick="switchView('timeline')">By Timeline</button>
-        </div>
-
-        <!-- Metrics -->
-        <div class="metrics-grid" id="metrics-grid" style="display: none;">
-            <div class="metric-card gold">
-                <div class="metric-label">Active Projects</div>
-                <div class="metric-value" id="m-projects">0</div>
-            </div>
-            <div class="metric-card emerald">
-                <div class="metric-label">Completed</div>
-                <div class="metric-value" id="m-complete">0</div>
-                <div class="metric-sub" id="m-complete-pct">0%</div>
-            </div>
-            <div class="metric-card sky">
-                <div class="metric-label">In Progress</div>
-                <div class="metric-value" id="m-progress">0</div>
-            </div>
-            <div class="metric-card rose">
-                <div class="metric-label">Overdue</div>
-                <div class="metric-value" id="m-overdue">0</div>
-            </div>
-            <div class="metric-card amber">
-                <div class="metric-label">Due This Week</div>
-                <div class="metric-value" id="m-week">0</div>
-            </div>
-            <div class="metric-card teal">
-                <div class="metric-label">IEF Tasks</div>
-                <div class="metric-value" id="m-ief">0</div>
-            </div>
-            <div class="metric-card violet">
-                <div class="metric-label">Team</div>
-                <div class="metric-value" id="m-team">0</div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-layout" id="main-content" style="display: none;">
-            <div class="content-area" id="content-area"></div>
-            <div class="sidebar">
-                <div class="sidebar-card">
-                    <div class="sidebar-header">
-                        <h3>⚡ Deadlines</h3>
-                        <span class="sidebar-badge" id="deadline-count">0</span>
-                    </div>
-                    <div id="deadlines-list"></div>
+        <!-- Dashboard Content (hidden until connected) -->
+        <div id="dashboard-content" style="display: none;">
+            <!-- Quick Stats -->
+            <div class="quick-stats" id="quick-stats">
+                <div class="quick-stat gold">
+                    <span class="quick-stat-value" id="qs-clients">0</span>
+                    <span class="quick-stat-label">Clients</span>
                 </div>
-                <div class="sidebar-card">
-                    <div class="sidebar-header">
-                        <h3>👥 Workload</h3>
-                    </div>
-                    <div class="entity-summary">
-                        <div class="entity-summary-card ipc">
-                            <div class="entity-summary-label">IPC Tasks</div>
-                            <div class="entity-summary-value" id="ipc-task-count">0</div>
+                <div class="quick-stat sky">
+                    <span class="quick-stat-value" id="qs-projects">0</span>
+                    <span class="quick-stat-label">Projects</span>
+                </div>
+                <div class="quick-stat emerald">
+                    <span class="quick-stat-value" id="qs-complete">0</span>
+                    <span class="quick-stat-label">Complete</span>
+                </div>
+                <div class="quick-stat amber">
+                    <span class="quick-stat-value" id="qs-progress">0</span>
+                    <span class="quick-stat-label">In Progress</span>
+                </div>
+                <div class="quick-stat rose">
+                    <span class="quick-stat-value" id="qs-overdue">0</span>
+                    <span class="quick-stat-label">Overdue</span>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <span class="filter-label">Client</span>
+                    <select class="filter-select" id="filter-client" onchange="applyFilters()">
+                        <option value="">All Clients</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Project</span>
+                    <select class="filter-select" id="filter-project" onchange="applyFilters()">
+                        <option value="">All Projects</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Lead</span>
+                    <select class="filter-select" id="filter-lead" onchange="applyFilters()">
+                        <option value="">All Leads</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Assignee</span>
+                    <select class="filter-select" id="filter-assignee" onchange="applyFilters()">
+                        <option value="">All Assignees</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Status</span>
+                    <select class="filter-select" id="filter-status" onchange="applyFilters()">
+                        <option value="">All</option>
+                        <option value="not-complete">Not Complete</option>
+                        <option value="overdue">Overdue</option>
+                        <option value="this-week">Due This Week</option>
+                        <option value="this-month">Due This Month</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search..." oninput="applyFilters()">
+                </div>
+                <button class="clear-filters" onclick="clearFilters()">Clear All</button>
+            </div>
+
+            <!-- View Tabs -->
+            <div class="view-tabs">
+                <button class="view-tab active" data-view="overview" onclick="switchView('overview')">Overview</button>
+                <button class="view-tab" data-view="client" onclick="switchView('client')">By Client</button>
+                <button class="view-tab" data-view="project" onclick="switchView('project')">By Project</button>
+                <button class="view-tab" data-view="lead" onclick="switchView('lead')">By Lead</button>
+                <button class="view-tab" data-view="assignee" onclick="switchView('assignee')">By Assignee</button>
+                <button class="view-tab" data-view="task" onclick="switchView('task')">All Tasks</button>
+                <button class="view-tab" data-view="timeline" onclick="switchView('timeline')">Timeline</button>
+            </div>
+
+            <!-- Main Layout -->
+            <div class="main-layout">
+                <div class="content-area" id="content-area"></div>
+                <div class="sidebar">
+                    <div class="sidebar-card">
+                        <div class="sidebar-header">
+                            <h3>⚡ My Deadlines</h3>
+                            <span class="sidebar-badge" id="deadline-count">0</span>
                         </div>
-                        <div class="entity-summary-card ief">
-                            <div class="entity-summary-label">IEF Tasks</div>
-                            <div class="entity-summary-value" id="ief-task-count">0</div>
-                        </div>
+                        <div id="deadlines-list"></div>
                     </div>
-                    <div id="workload-list"></div>
+                    <div class="sidebar-card">
+                        <div class="sidebar-header">
+                            <h3>💚 Client Health</h3>
+                        </div>
+                        <div id="health-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Welcome State -->
-        <div class="empty-state" id="welcome-state">
-            <div class="empty-state-icon">📊</div>
-            <p>Connect your IPC + IEF Google Sheet</p>
-            <p style="font-size: 0.75rem; margin-top: 0.35rem;">Click Setup to connect or Load Demo to preview</p>
+        <div class="welcome-state" id="welcome-state">
+            <h2>Welcome to IPC Consulting Hub</h2>
+            <p>Connect your client Google Sheets to see all projects in one place.</p>
+            <button class="btn btn-primary" onclick="toggleSetup()">⚙️ Get Started</button>
         </div>
     </div>
 
     <script>
-        // State
-        const CONFIG_KEY = 'ipc-ief-dashboard';
-        let config = { sheetId: localStorage.getItem(CONFIG_KEY) || '1_AAjePsJq1u2KlAWm8ol_0iQkK16_WJl' };
+        /* ================================================================
+           CONFIGURATION
+           ================================================================ */
+        
+        const CONFIG_KEY = 'ipc-consulting-hub-v2';
+        
+        let config = {
+            clients: [
+                { name: 'Treehouse Therapies', sheetId: '1JE6ngi9t8oNKPqZ3I_NjrC90WCdkmVNr', color: '#4A90A4' },
+                { name: 'In Reach Therapy', sheetId: '1Pp-brDjxPdstNGEnQOOuWa90flXL72tw', color: '#6B8E23' }
+            ],
+            team: [
+                { name: 'Alayna', role: 'CEO / Operations Lead' },
+                { name: 'Emily', role: 'Operations Partner' }
+            ]
+        };
+
         let state = {
-            programs: [],
-            tasks: [],
-            team: [],
-            currentView: 'projects',
-            entityFilter: 'all',
-            filters: { program: '', lead: '', status: '', due: '', search: '' }
+            clients: [],           // Loaded client data
+            currentTeamMember: 'all',
+            currentView: 'overview',
+            filters: { client: '', project: '', lead: '', assignee: '', status: '', search: '' }
         };
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('sheet-id-input').value = config.sheetId;
-            if (config.sheetId) connectSheet();
+            loadConfig();
+            renderSetupUI();
+            if (config.clients.length > 0) {
+                connectAllClients();
+            }
         });
 
-        // Google Sheets
-        async function connectSheet() {
-            const sheetId = document.getElementById('sheet-id-input').value.trim();
-            if (!sheetId) return;
-            config.sheetId = sheetId;
-            localStorage.setItem(CONFIG_KEY, sheetId);
-            updateStatus('connecting');
-            try {
-                const [programs, tasks, team] = await Promise.all([
-                    fetchSheet(sheetId, 'Programs'),
-                    fetchSheet(sheetId, 'Tasks'),
-                    fetchSheet(sheetId, 'Team')
-                ]);
-                state.programs = parsePrograms(programs);
-                state.tasks = parseTasks(tasks);
-                state.team = parseTeam(team);
-                linkData();
-                updateStatus('connected');
-                showDashboard();
-                document.getElementById('sheet-link').href = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
-                document.getElementById('sheet-link').style.display = 'flex';
-                document.getElementById('setup-panel').classList.remove('active');
-            } catch (e) {
-                console.error(e);
-                updateStatus('error');
-                alert('Connection failed. Check Sheet ID and publish settings.');
+        function loadConfig() {
+            const stored = localStorage.getItem(CONFIG_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                // Only use stored config if it has clients
+                if (parsed.clients && parsed.clients.length > 0) {
+                    config = parsed;
+                }
             }
+        }
+
+        function saveConfig() {
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        }
+
+        /* ================================================================
+           SETUP UI
+           ================================================================ */
+
+        function toggleSetup() {
+            document.getElementById('setup-panel').classList.toggle('active');
+        }
+
+        function switchSetupTab(tab) {
+            document.querySelectorAll('.setup-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.setup-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`setup-${tab}`).classList.add('active');
+        }
+
+        function renderSetupUI() {
+            renderClientInputs();
+            renderTeamInputs();
+            renderTeamSelector();
+        }
+
+        function renderClientInputs() {
+            const container = document.getElementById('clients-config');
+            if (config.clients.length === 0) {
+                container.innerHTML = clientInputRow(0);
+            } else {
+                container.innerHTML = config.clients.map((c, i) => clientInputRow(i, c)).join('');
+            }
+        }
+
+        function clientInputRow(index, client = { name: '', sheetId: '', color: '#d4a853' }) {
+            return `
+                <div class="client-config-row" data-index="${index}">
+                    <input type="text" class="form-input client-name" placeholder="Client Name" value="${client.name || ''}">
+                    <input type="text" class="form-input client-sheet" placeholder="Google Sheet ID (from URL)" value="${client.sheetId || ''}">
+                    <input type="color" class="color-input client-color" value="${client.color || '#d4a853'}">
+                    <button class="remove-btn" onclick="removeClientRow(${index})">×</button>
+                </div>
+            `;
+        }
+
+        function addClientRow() {
+            const container = document.getElementById('clients-config');
+            const index = container.children.length;
+            container.insertAdjacentHTML('beforeend', clientInputRow(index));
+        }
+
+        function removeClientRow(index) {
+            const rows = document.querySelectorAll('.client-config-row');
+            if (rows.length > 1) {
+                rows[index].remove();
+                reindexRows('.client-config-row', 'removeClientRow');
+            }
+        }
+
+        function renderTeamInputs() {
+            const container = document.getElementById('team-config');
+            if (config.team.length === 0) {
+                container.innerHTML = teamInputRow(0);
+            } else {
+                container.innerHTML = config.team.map((t, i) => teamInputRow(i, t)).join('');
+            }
+        }
+
+        function teamInputRow(index, member = { name: '', role: '' }) {
+            return `
+                <div class="team-config-row" data-index="${index}">
+                    <input type="text" class="form-input team-name" placeholder="Name" value="${member.name || ''}">
+                    <input type="text" class="form-input team-role" placeholder="Role" value="${member.role || ''}">
+                    <button class="remove-btn" onclick="removeTeamRow(${index})">×</button>
+                </div>
+            `;
+        }
+
+        function addTeamRow() {
+            const container = document.getElementById('team-config');
+            const index = container.children.length;
+            container.insertAdjacentHTML('beforeend', teamInputRow(index));
+        }
+
+        function removeTeamRow(index) {
+            const rows = document.querySelectorAll('.team-config-row');
+            if (rows.length > 1) {
+                rows[index].remove();
+                reindexRows('.team-config-row', 'removeTeamRow');
+            }
+        }
+
+        function reindexRows(selector, removeFn) {
+            document.querySelectorAll(selector).forEach((row, i) => {
+                row.dataset.index = i;
+                row.querySelector('.remove-btn').onclick = () => window[removeFn](i);
+            });
+        }
+
+        function renderTeamSelector() {
+            const select = document.getElementById('team-member-select');
+            let html = '<option value="all">Everyone (All Tasks)</option>';
+            config.team.forEach(t => {
+                if (t.name) {
+                    html += `<option value="${t.name}">${t.name}</option>`;
+                }
+            });
+            select.innerHTML = html;
+            select.value = state.currentTeamMember;
+        }
+
+        function saveAndConnect() {
+            // Gather client config
+            config.clients = [];
+            document.querySelectorAll('.client-config-row').forEach(row => {
+                const name = row.querySelector('.client-name').value.trim();
+                const sheetId = row.querySelector('.client-sheet').value.trim();
+                const color = row.querySelector('.client-color').value;
+                if (name && sheetId) {
+                    config.clients.push({ name, sheetId, color });
+                }
+            });
+
+            // Gather team config
+            config.team = [];
+            document.querySelectorAll('.team-config-row').forEach(row => {
+                const name = row.querySelector('.team-name').value.trim();
+                const role = row.querySelector('.team-role').value.trim();
+                if (name) {
+                    config.team.push({ name, role });
+                }
+            });
+
+            saveConfig();
+            renderTeamSelector();
+            
+            if (config.clients.length > 0) {
+                connectAllClients();
+            }
+        }
+
+        function exportConfig() {
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ipc-hub-config.json';
+            a.click();
+        }
+
+        /* ================================================================
+           DATA LOADING
+           ================================================================ */
+
+        async function connectAllClients() {
+            updateStatus('connecting');
+            state.clients = [];
+            let connected = 0;
+            let failed = 0;
+
+            for (const client of config.clients) {
+                try {
+                    const [programs, tasks, team] = await Promise.all([
+                        fetchSheet(client.sheetId, 'Programs'),
+                        fetchSheet(client.sheetId, 'Tasks'),
+                        fetchSheet(client.sheetId, 'Team')
+                    ]);
+
+                    const clientData = {
+                        ...client,
+                        programs: parsePrograms(programs),
+                        tasks: parseTasks(tasks),
+                        team: parseTeam(team),
+                        connected: true
+                    };
+
+                    // Link tasks to programs
+                    clientData.programs.forEach(p => {
+                        p.tasks = clientData.tasks.filter(t =>
+                            t.programName.toLowerCase() === p.name.toLowerCase()
+                        );
+                    });
+
+                    state.clients.push(clientData);
+                    connected++;
+                } catch (e) {
+                    console.error(`Failed to connect ${client.name}:`, e);
+                    state.clients.push({ ...client, programs: [], tasks: [], team: [], connected: false });
+                    failed++;
+                }
+            }
+
+            if (connected === config.clients.length) {
+                updateStatus('connected');
+            } else if (connected > 0) {
+                updateStatus('partial');
+            } else {
+                updateStatus('error');
+            }
+
+            showDashboard();
+            document.getElementById('setup-panel').classList.remove('active');
         }
 
         async function fetchSheet(sheetId, name) {
@@ -1243,14 +1332,11 @@
                 return {
                     id: i + 1,
                     name: get('program') || get('project') || get('name'),
-                    entity: (get('entity') || 'ipc').toLowerCase(),
                     lead: get('lead') || get('owner'),
                     team: (get('team') || '').split(',').map(s => s.trim()).filter(Boolean),
                     startDate: get('start'),
                     endDate: get('end') || get('target'),
                     status: normalizeStatus(get('status')),
-                    metrics: get('metric') || get('goal'),
-                    notes: get('note'),
                     tasks: []
                 };
             }).filter(p => p.name);
@@ -1279,8 +1365,7 @@
                     priority: (get('priority') || 'medium').toLowerCase(),
                     category: categories.join(', ') || 'Other',
                     categories: categories,
-                    completed: ['complete', 'completed', 'done'].includes(status),
-                    entity: '' // Will be set from program
+                    completed: ['complete', 'completed', 'done'].includes(status)
                 };
             }).filter(t => t.name);
         }
@@ -1295,11 +1380,10 @@
                 };
                 const name = get('team name') || get('name');
                 if (!name) return null;
-                return {
-                    id: i + 1,
-                    name: name,
+                return { 
+                    id: i + 1, 
+                    name: name, 
                     role: get('team role') || get('role') || get('title'),
-                    entity: (get('team entity') || get('entity') || 'both').toLowerCase(),
                     contact: get('team contact') || get('contact') || get('email') || ''
                 };
             }).filter(t => t && t.name);
@@ -1317,457 +1401,613 @@
             return map[s] || 'planning';
         }
 
-        function linkData() {
-            state.programs.forEach(p => {
-                p.tasks = state.tasks.filter(t => t.programName.toLowerCase() === p.name.toLowerCase());
-                p.tasks.forEach(t => t.entity = p.entity);
-            });
+        async function refreshAll() {
+            if (config.clients.length > 0) {
+                await connectAllClients();
+            }
         }
 
-        async function refreshData() { if (config.sheetId) await connectSheet(); }
+        /* ================================================================
+           DEMO DATA
+           ================================================================ */
 
-        // Demo Data
         function loadDemoData() {
-            state.programs = [
-                { id: 1, name: 'Music Teacher Income Planner', entity: 'ipc', lead: 'Alayna', team: ['Alayna'], startDate: '2024-11-15', endDate: '2024-12-15', status: 'completed', metrics: 'Launch on Etsy, $47 price point', tasks: [] },
-                { id: 2, name: 'Delivery Driver Optimizer', entity: 'ipc', lead: 'Alayna', team: ['Alayna'], startDate: '2024-12-01', endDate: '2024-12-20', status: 'on-track', metrics: 'Complete toolkit, Etsy listing', tasks: [] },
-                { id: 3, name: 'IEF Platform Build', entity: 'ief', lead: 'Emily', team: ['Emily', 'Alayna'], startDate: '2024-10-01', endDate: '2025-01-15', status: 'on-track', metrics: '3 tiers ($97-$997), 50 subscribers', tasks: [] },
-                { id: 4, name: 'In Reach Therapy Onboarding', entity: 'ief', lead: 'Emily', team: ['Emily'], startDate: '2024-12-01', endDate: '2024-12-31', status: 'on-track', metrics: 'Full ops setup, $4,500/mo retainer', tasks: [] },
-                { id: 5, name: 'Bearded Bookseller Press', entity: 'ipc', lead: 'Marcus', team: ['Marcus', 'Sarah', 'Alayna'], startDate: '2024-01-15', endDate: '2025-06-30', status: 'on-track', metrics: 'Launch 3 titles, $15K revenue', tasks: [] },
-                { id: 6, name: 'Central Oregon Volunteer Connect', entity: 'ipc', lead: 'Alayna', team: ['Alayna'], startDate: '2024-11-01', endDate: '2024-12-31', status: 'at-risk', metrics: 'Giving Tuesday campaign, 100 signups', tasks: [] }
+            config.clients = [
+                { name: 'Treehouse Therapies', sheetId: 'demo-treehouse', color: '#4A90A4' },
+                { name: 'In Reach Therapy', sheetId: 'demo-inreach', color: '#6B8E23' },
+                { name: 'Bearded Bookseller', sheetId: 'demo-bookseller', color: '#8B4513' }
             ];
-            state.tasks = [
-                // Music Teacher (completed)
-                { id: 1, programName: 'Music Teacher Income Planner', name: 'Build calculator HTML', assignee: 'Alayna', dueDate: '2024-12-05', priority: 'high', completed: true },
-                { id: 2, programName: 'Music Teacher Income Planner', name: 'Create Etsy listing', assignee: 'Alayna', dueDate: '2024-12-10', priority: 'high', completed: true },
-                // Delivery Driver
-                { id: 3, programName: 'Delivery Driver Optimizer', name: 'Research gig platforms', assignee: 'Alayna', dueDate: '2024-12-08', priority: 'medium', completed: true },
-                { id: 4, programName: 'Delivery Driver Optimizer', name: 'Build expense tracker', assignee: 'Alayna', dueDate: '2024-12-12', priority: 'high', completed: false },
-                { id: 5, programName: 'Delivery Driver Optimizer', name: 'Create route optimizer', assignee: 'Alayna', dueDate: '2024-12-15', priority: 'high', completed: false },
-                { id: 6, programName: 'Delivery Driver Optimizer', name: 'Write listing copy', assignee: 'Alayna', dueDate: '2024-12-18', priority: 'medium', completed: false },
-                // IEF Platform
-                { id: 7, programName: 'IEF Platform Build', name: 'Complete Tier 1 resources', assignee: 'Emily', dueDate: '2024-12-15', priority: 'high', completed: false },
-                { id: 8, programName: 'IEF Platform Build', name: 'Set up payment processing', assignee: 'Emily', dueDate: '2024-12-20', priority: 'high', completed: false },
-                { id: 9, programName: 'IEF Platform Build', name: 'Create onboarding sequence', assignee: 'Alayna', dueDate: '2024-12-22', priority: 'medium', completed: false },
-                { id: 10, programName: 'IEF Platform Build', name: 'Build marketing page', assignee: 'Emily', dueDate: '2025-01-05', priority: 'medium', completed: false },
-                // In Reach
-                { id: 11, programName: 'In Reach Therapy Onboarding', name: 'Complete discovery call', assignee: 'Emily', dueDate: '2024-12-05', priority: 'high', completed: true },
-                { id: 12, programName: 'In Reach Therapy Onboarding', name: 'Create SOPs document', assignee: 'Emily', dueDate: '2024-12-12', priority: 'high', completed: false },
-                { id: 13, programName: 'In Reach Therapy Onboarding', name: 'Set up financial tracking', assignee: 'Emily', dueDate: '2024-12-18', priority: 'medium', completed: false },
-                // Bearded Bookseller
-                { id: 14, programName: 'Bearded Bookseller Press', name: 'Finalize Q1 cover designs', assignee: 'Sarah', dueDate: '2024-12-15', priority: 'high', completed: false },
-                { id: 15, programName: 'Bearded Bookseller Press', name: 'Complete ISBN registration', assignee: 'Marcus', dueDate: '2024-12-18', priority: 'high', completed: false },
-                { id: 16, programName: 'Bearded Bookseller Press', name: 'Set up distribution', assignee: 'Marcus', dueDate: '2024-12-22', priority: 'medium', completed: false },
-                // Volunteer Connect
-                { id: 17, programName: 'Central Oregon Volunteer Connect', name: 'Launch Giving Tuesday campaign', assignee: 'Alayna', dueDate: '2024-12-03', priority: 'high', completed: true },
-                { id: 18, programName: 'Central Oregon Volunteer Connect', name: 'Follow up with signups', assignee: 'Alayna', dueDate: '2024-12-10', priority: 'high', completed: false },
-                { id: 19, programName: 'Central Oregon Volunteer Connect', name: 'Create January calendar', assignee: 'Alayna', dueDate: '2024-12-20', priority: 'medium', completed: false }
+            config.team = [
+                { name: 'Alayna', role: 'CEO / Operations Lead' },
+                { name: 'Emily', role: 'Operations Partner' }
             ];
-            state.team = [
-                { id: 1, name: 'Alayna', role: 'CEO / Operations Lead', entity: 'both' },
-                { id: 2, name: 'Emily', role: 'Operations Partner', entity: 'ief' },
-                { id: 3, name: 'Marcus', role: 'Publisher', entity: 'ipc' },
-                { id: 4, name: 'Sarah', role: 'Creative Director', entity: 'ipc' }
+
+            state.clients = [
+                {
+                    name: 'Treehouse Therapies', color: '#4A90A4', connected: true,
+                    programs: [
+                        { id: 1, name: 'HRIS Implementation', lead: 'Alayna', team: ['Alayna'], status: 'on-track', tasks: [] },
+                        { id: 2, name: 'Chelsea Offboarding', lead: 'Alayna', team: ['Alayna', 'Chelsea'], status: 'on-track', tasks: [] }
+                    ],
+                    tasks: [
+                        { id: 1, programName: 'HRIS Implementation', name: 'Migrate employee records', assignee: 'Alayna', dueDate: '2024-12-12', priority: 'high', completed: false },
+                        { id: 2, programName: 'HRIS Implementation', name: 'Create onboarding workflow', assignee: 'Alayna', dueDate: '2024-12-18', priority: 'medium', completed: false },
+                        { id: 3, programName: 'HRIS Implementation', name: 'Train team on system', assignee: 'Alayna', dueDate: '2025-01-05', priority: 'medium', completed: false },
+                        { id: 4, programName: 'Chelsea Offboarding', name: 'Document processes', assignee: 'Chelsea', dueDate: '2024-12-15', priority: 'high', completed: false },
+                        { id: 5, programName: 'Chelsea Offboarding', name: 'Transfer clients', assignee: 'Alayna', dueDate: '2024-12-20', priority: 'high', completed: false },
+                        { id: 6, programName: 'Chelsea Offboarding', name: 'Exit interview', assignee: 'Alayna', dueDate: '2024-12-28', priority: 'medium', completed: false }
+                    ],
+                    team: [{ name: 'Alayna', role: 'Operations' }, { name: 'Chelsea', role: 'BH Director' }]
+                },
+                {
+                    name: 'In Reach Therapy', color: '#6B8E23', connected: true,
+                    programs: [
+                        { id: 1, name: 'Operations Onboarding', lead: 'Emily', team: ['Emily'], status: 'on-track', tasks: [] }
+                    ],
+                    tasks: [
+                        { id: 1, programName: 'Operations Onboarding', name: 'Complete discovery call', assignee: 'Emily', dueDate: '2024-12-05', priority: 'high', completed: true },
+                        { id: 2, programName: 'Operations Onboarding', name: 'Create SOPs document', assignee: 'Emily', dueDate: '2024-12-12', priority: 'high', completed: false },
+                        { id: 3, programName: 'Operations Onboarding', name: 'Set up financial tracking', assignee: 'Emily', dueDate: '2024-12-18', priority: 'medium', completed: false },
+                        { id: 4, programName: 'Operations Onboarding', name: 'Staff handbook review', assignee: 'Emily', dueDate: '2024-12-22', priority: 'medium', completed: false }
+                    ],
+                    team: [{ name: 'Emily', role: 'Ops Partner' }]
+                },
+                {
+                    name: 'Bearded Bookseller', color: '#8B4513', connected: true,
+                    programs: [
+                        { id: 1, name: 'Press Launch', lead: 'Marcus', team: ['Marcus', 'Sarah', 'Alayna'], status: 'at-risk', tasks: [] }
+                    ],
+                    tasks: [
+                        { id: 1, programName: 'Press Launch', name: 'Finalize cover designs', assignee: 'Sarah', dueDate: '2024-12-10', priority: 'high', completed: false },
+                        { id: 2, programName: 'Press Launch', name: 'ISBN registration', assignee: 'Marcus', dueDate: '2024-12-15', priority: 'high', completed: false },
+                        { id: 3, programName: 'Press Launch', name: 'Distribution setup', assignee: 'Marcus', dueDate: '2024-12-20', priority: 'medium', completed: false },
+                        { id: 4, programName: 'Press Launch', name: 'Marketing plan review', assignee: 'Alayna', dueDate: '2024-12-22', priority: 'medium', completed: false }
+                    ],
+                    team: [{ name: 'Marcus', role: 'Publisher' }, { name: 'Sarah', role: 'Creative' }, { name: 'Alayna', role: 'Advisor' }]
+                }
             ];
-            linkData();
+
+            // Link tasks to programs
+            state.clients.forEach(client => {
+                client.programs.forEach(p => {
+                    p.tasks = client.tasks.filter(t => t.programName === p.name);
+                });
+            });
+
+            saveConfig();
+            renderSetupUI();
             updateStatus('connected');
             showDashboard();
             document.getElementById('setup-panel').classList.remove('active');
         }
 
-        // UI
+        /* ================================================================
+           UI FUNCTIONS
+           ================================================================ */
+
         function updateStatus(s) {
             const dot = document.getElementById('status-dot');
             const txt = document.getElementById('status-text');
             dot.className = 'status-dot';
-            if (s === 'connecting') txt.textContent = 'Connecting...';
-            else if (s === 'connected') { dot.classList.add('connected'); txt.textContent = 'Connected'; }
-            else if (s === 'error') { dot.classList.add('error'); txt.textContent = 'Error'; }
-            else txt.textContent = 'Not connected';
+            if (s === 'connecting') { txt.textContent = 'Connecting...'; }
+            else if (s === 'connected') { dot.classList.add('connected'); txt.textContent = `${state.clients.length} clients connected`; }
+            else if (s === 'partial') { dot.classList.add('partial'); txt.textContent = 'Some clients failed'; }
+            else if (s === 'error') { dot.classList.add('error'); txt.textContent = 'Connection failed'; }
+            else { txt.textContent = 'Not connected'; }
         }
-
-        function toggleSetup() { document.getElementById('setup-panel').classList.toggle('active'); }
 
         function showDashboard() {
             document.getElementById('welcome-state').style.display = 'none';
-            document.getElementById('entity-tabs').style.display = 'flex';
-            document.getElementById('filter-bar').style.display = 'flex';
-            document.getElementById('view-tabs').style.display = 'flex';
-            document.getElementById('metrics-grid').style.display = 'grid';
-            document.getElementById('main-content').style.display = 'grid';
+            document.getElementById('dashboard-content').style.display = 'block';
             populateFilters();
             renderAll();
         }
 
-        function populateFilters() {
-            const progSelect = document.getElementById('filter-program');
-            progSelect.innerHTML = '<option value="">All</option>' + state.programs.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+        function switchTeamMember() {
+            state.currentTeamMember = document.getElementById('team-member-select').value;
             
-            // Leads (project owners)
-            const leads = [...new Set(state.programs.map(p => p.lead).filter(Boolean))].sort();
-            const leadSelect = document.getElementById('filter-lead');
-            leadSelect.innerHTML = '<option value="">All</option>' + leads.map(l => `<option value="${l}">${l}</option>`).join('');
+            // Auto-set assignee filter when team member selected
+            if (state.currentTeamMember !== 'all') {
+                document.getElementById('filter-assignee').value = state.currentTeamMember;
+                state.filters.assignee = state.currentTeamMember;
+            } else {
+                document.getElementById('filter-assignee').value = '';
+                state.filters.assignee = '';
+            }
             
-            // Assignees (task assignees)
-            const assignees = [...new Set([...state.team.map(t => t.name), ...state.tasks.map(t => t.assignee).filter(Boolean)])].sort();
-            const assigneeSelect = document.getElementById('filter-assignee');
-            assigneeSelect.innerHTML = '<option value="">All</option>' + assignees.map(a => `<option value="${a}">${a}</option>`).join('');
+            renderAll();
         }
 
-        function filterEntity(entity) {
-            state.entityFilter = entity;
-            document.querySelectorAll('.entity-tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.entity === entity);
+        function populateFilters() {
+            // Clients
+            const clientSelect = document.getElementById('filter-client');
+            clientSelect.innerHTML = '<option value="">All Clients</option>' +
+                state.clients.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+            // Projects
+            const allProjects = state.clients.flatMap(c => c.programs.map(p => p.name));
+            const uniqueProjects = [...new Set(allProjects)].sort();
+            document.getElementById('filter-project').innerHTML = '<option value="">All Projects</option>' +
+                uniqueProjects.map(p => `<option value="${p}">${p}</option>`).join('');
+
+            // Leads & Assignees
+            const allPeople = new Set();
+            state.clients.forEach(c => {
+                c.programs.forEach(p => { if (p.lead) allPeople.add(p.lead); });
+                c.tasks.forEach(t => { if (t.assignee) allPeople.add(t.assignee); });
             });
-            applyFilters();
+            const peopleList = [...allPeople].sort();
+            
+            document.getElementById('filter-lead').innerHTML = '<option value="">All Leads</option>' +
+                peopleList.map(p => `<option value="${p}">${p}</option>`).join('');
+            document.getElementById('filter-assignee').innerHTML = '<option value="">All Assignees</option>' +
+                peopleList.map(p => `<option value="${p}">${p}</option>`).join('');
         }
 
         function applyFilters() {
             state.filters = {
-                program: document.getElementById('filter-program').value,
+                client: document.getElementById('filter-client').value,
+                project: document.getElementById('filter-project').value,
                 lead: document.getElementById('filter-lead').value,
                 assignee: document.getElementById('filter-assignee').value,
                 status: document.getElementById('filter-status').value,
-                due: document.getElementById('filter-due').value,
                 search: document.getElementById('search-input').value.toLowerCase()
             };
             renderAll();
         }
 
         function clearFilters() {
-            document.getElementById('filter-program').value = '';
+            document.getElementById('filter-client').value = '';
+            document.getElementById('filter-project').value = '';
             document.getElementById('filter-lead').value = '';
             document.getElementById('filter-assignee').value = '';
             document.getElementById('filter-status').value = '';
-            document.getElementById('filter-due').value = '';
             document.getElementById('search-input').value = '';
-            applyFilters();
+            state.filters = { client: '', project: '', lead: '', assignee: '', status: '', search: '' };
+            renderAll();
         }
 
         function getFilteredData() {
-            let programs = [...state.programs];
-            let tasks = [...state.tasks];
-            // Entity filter
-            if (state.entityFilter !== 'all') {
-                programs = programs.filter(p => p.entity === state.entityFilter);
-                tasks = tasks.filter(t => t.entity === state.entityFilter);
+            let tasks = [];
+            let programs = [];
+
+            state.clients.forEach(client => {
+                // Filter by client
+                if (state.filters.client && client.name !== state.filters.client) return;
+
+                client.tasks.forEach(t => {
+                    tasks.push({ ...t, clientName: client.name, clientColor: client.color });
+                });
+                client.programs.forEach(p => {
+                    programs.push({ ...p, clientName: client.name, clientColor: client.color });
+                });
+            });
+
+            // Filter by project
+            if (state.filters.project) {
+                tasks = tasks.filter(t => t.programName === state.filters.project);
+                programs = programs.filter(p => p.name === state.filters.project);
             }
-            if (state.filters.program) {
-                programs = programs.filter(p => p.name === state.filters.program);
-                tasks = tasks.filter(t => t.programName === state.filters.program);
-            }
+
+            // Filter by lead
             if (state.filters.lead) {
                 programs = programs.filter(p => p.lead === state.filters.lead);
-                // Only show tasks from projects owned by this lead
                 const leadProjects = programs.map(p => p.name);
                 tasks = tasks.filter(t => leadProjects.includes(t.programName));
             }
+
+            // Filter by assignee
             if (state.filters.assignee) {
                 tasks = tasks.filter(t => t.assignees && t.assignees.includes(state.filters.assignee));
             }
-            if (state.filters.status) programs = programs.filter(p => p.status === state.filters.status);
-            if (state.filters.due) {
-                const today = new Date(); today.setHours(0,0,0,0);
-                const week = new Date(today); week.setDate(week.getDate() + 7);
-                const month = new Date(today); month.setMonth(month.getMonth() + 1);
-                tasks = tasks.filter(t => {
-                    if (!t.dueDate) return false;
-                    const d = new Date(t.dueDate);
-                    if (state.filters.due === 'overdue') return d < today && !t.completed;
-                    if (state.filters.due === 'week') return d >= today && d <= week;
-                    if (state.filters.due === 'month') return d >= today && d <= month;
-                    return true;
-                });
+
+            // Filter by status
+            const today = new Date(); today.setHours(0,0,0,0);
+            const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
+            const monthEnd = new Date(today); monthEnd.setMonth(monthEnd.getMonth() + 1);
+
+            if (state.filters.status === 'not-complete') {
+                tasks = tasks.filter(t => !t.completed);
+            } else if (state.filters.status === 'overdue') {
+                tasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today);
+            } else if (state.filters.status === 'this-week') {
+                tasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) <= weekEnd);
+            } else if (state.filters.status === 'this-month') {
+                tasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) <= monthEnd);
             }
+
+            // Search
             if (state.filters.search) {
                 const s = state.filters.search;
-                tasks = tasks.filter(t => t.name.toLowerCase().includes(s) || (t.assignee||'').toLowerCase().includes(s));
-                programs = programs.filter(p => p.name.toLowerCase().includes(s) || (p.lead||'').toLowerCase().includes(s));
+                tasks = tasks.filter(t => 
+                    t.name.toLowerCase().includes(s) || 
+                    (t.assignee || '').toLowerCase().includes(s) ||
+                    t.programName.toLowerCase().includes(s)
+                );
+                programs = programs.filter(p => 
+                    p.name.toLowerCase().includes(s) || 
+                    (p.lead || '').toLowerCase().includes(s)
+                );
             }
-            programs.forEach(p => { p.tasks = tasks.filter(t => t.programName === p.name); });
-            return { programs, tasks };
+
+            // Link filtered tasks back to programs
+            programs.forEach(p => {
+                p.tasks = tasks.filter(t => t.programName === p.name && t.clientName === p.clientName);
+            });
+
+            return { tasks, programs };
         }
 
         function switchView(view) {
             state.currentView = view;
             document.querySelectorAll('.view-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
-            renderView();
+            renderMainContent();
         }
 
         function renderAll() {
-            renderMetrics();
-            renderView();
+            renderQuickStats();
+            renderMainContent();
             renderSidebar();
         }
 
-        function renderMetrics() {
-            const { programs, tasks } = getFilteredData();
-            const complete = tasks.filter(t => t.completed).length;
-            const progress = tasks.filter(t => !t.completed).length;
-            const overdue = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length;
-            const week = new Date(); week.setDate(week.getDate() + 7);
-            const dueWeek = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) >= new Date() && new Date(t.dueDate) <= week).length;
-            const iefTasks = state.tasks.filter(t => t.entity === 'ief' && !t.completed).length;
-            const ipcTasks = state.tasks.filter(t => t.entity === 'ipc' && !t.completed).length;
+        function renderQuickStats() {
+            const { tasks, programs } = getFilteredData();
+            const today = new Date(); today.setHours(0,0,0,0);
             
-            document.getElementById('m-projects').textContent = programs.filter(p => p.status !== 'completed').length;
-            document.getElementById('m-complete').textContent = complete;
-            document.getElementById('m-complete-pct').textContent = tasks.length ? `${Math.round(complete/tasks.length*100)}%` : '0%';
-            document.getElementById('m-progress').textContent = progress;
-            document.getElementById('m-overdue').textContent = overdue;
-            document.getElementById('m-week').textContent = dueWeek;
-            document.getElementById('m-ief').textContent = iefTasks;
-            document.getElementById('m-team').textContent = [...new Set(tasks.map(t => t.assignee).filter(Boolean))].length;
-            document.getElementById('ipc-task-count').textContent = ipcTasks;
-            document.getElementById('ief-task-count').textContent = iefTasks;
+            document.getElementById('qs-clients').textContent = state.filters.client ? 1 : state.clients.length;
+            document.getElementById('qs-projects').textContent = programs.filter(p => p.status !== 'completed').length;
+            document.getElementById('qs-complete').textContent = tasks.filter(t => t.completed).length;
+            document.getElementById('qs-progress').textContent = tasks.filter(t => !t.completed).length;
+            document.getElementById('qs-overdue').textContent = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today).length;
         }
 
-        function renderView() {
+        function renderMainContent() {
             const container = document.getElementById('content-area');
-            const { programs, tasks } = getFilteredData();
-            if (state.currentView === 'projects') renderProjectsView(container, programs);
-            else if (state.currentView === 'leads') renderLeadsView(container, programs, tasks);
-            else if (state.currentView === 'assignees') renderAssigneesView(container, tasks);
-            else if (state.currentView === 'timeline') renderTimelineView(container, tasks);
-            else if (state.currentView === 'tasks') renderTasksView(container, tasks);
+            const { tasks, programs } = getFilteredData();
+
+            switch (state.currentView) {
+                case 'overview': renderOverviewView(container, tasks, programs); break;
+                case 'client': renderClientView(container); break;
+                case 'project': renderProjectView(container, programs); break;
+                case 'lead': renderLeadView(container, programs, tasks); break;
+                case 'assignee': renderAssigneeView(container, tasks); break;
+                case 'task': renderTaskView(container, tasks); break;
+                case 'timeline': renderTimelineView(container, tasks); break;
+            }
         }
 
-        function renderProjectsView(container, programs) {
-            if (!programs.length) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No projects match filters</p></div>'; return; }
-            container.innerHTML = `<div class="programs-grid">${programs.map(renderProjectCard).join('')}</div>`;
-        }
+        function renderOverviewView(container, tasks, programs) {
+            const today = new Date(); today.setHours(0,0,0,0);
+            const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
 
-        function renderProjectCard(p) {
-            const done = p.tasks.filter(t => t.completed).length;
-            const total = p.tasks.length;
-            const pct = total ? Math.round(done/total*100) : 0;
-            const statusLabels = { 'planning': 'Planning', 'on-track': 'On Track', 'at-risk': 'At Risk', 'on-hold': 'On Hold', 'completed': 'Completed' };
-            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185'];
-            return `
-                <div class="program-card entity-${p.entity}" data-id="${p.id}">
-                    <div class="program-header" onclick="toggleProject(${p.id})">
-                        <div class="program-title-section">
-                            <h3><span class="entity-badge ${p.entity}">${p.entity.toUpperCase()}</span> ${esc(p.name)} <span class="program-status status-${p.status}">${statusLabels[p.status]}</span></h3>
-                            <div class="program-lead"><span class="avatar" style="background:${colors[0]}">${initials(p.lead)}</span>${esc(p.lead||'Unassigned')} · Lead</div>
+            const overdue = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today)
+                                .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+            const thisWeek = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) >= today && new Date(t.dueDate) <= weekEnd)
+                                 .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+            const title = state.currentTeamMember === 'all' ? 'Team Overview' : `${state.currentTeamMember}'s Dashboard`;
+
+            container.innerHTML = `
+                <h2 style="font-size: 1rem; margin-bottom: 1rem; color: var(--accent-gold);">${title}</h2>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header" style="cursor: default;">
+                            <div class="card-title">🚨 Overdue (${overdue.length})</div>
                         </div>
-                        <div class="program-meta">
-                            <div class="meta-item"><div class="meta-value">${done}/${total}</div><div class="meta-label">Tasks</div></div>
-                            <div class="meta-item"><div class="meta-value">${pct}%</div><div class="meta-label">Done</div></div>
-                            <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        <div class="card-body" style="max-height: none;">
+                            <div class="card-tasks">${overdue.length ? overdue.map(t => renderTaskItem(t, true)).join('') : '<p style="color: var(--text-muted); padding: 0.5rem;">No overdue tasks 🎉</p>'}</div>
                         </div>
                     </div>
-                    <div class="program-progress-bar"><div class="program-progress-fill" style="width:${pct}%"></div></div>
-                    <div class="program-body">
-                        <div class="program-details">
-                            <div class="details-grid">
-                                <div class="detail-item"><label>Timeline</label><span>${fmtDate(p.startDate)} → ${fmtDate(p.endDate)}</span></div>
-                                <div class="detail-item"><label>Metrics</label><span>${esc(p.metrics)||'—'}</span></div>
-                                <div class="detail-item"><label>Team</label><span>${p.team.length} members</span></div>
+                    <div class="card">
+                        <div class="card-header" style="cursor: default;">
+                            <div class="card-title">📅 Due This Week (${thisWeek.length})</div>
+                        </div>
+                        <div class="card-body" style="max-height: none;">
+                            <div class="card-tasks">${thisWeek.length ? thisWeek.map(t => renderTaskItem(t, false)).join('') : '<p style="color: var(--text-muted); padding: 0.5rem;">Nothing due this week</p>'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderClientView(container) {
+            const clientsToShow = state.filters.client ? 
+                state.clients.filter(c => c.name === state.filters.client) : 
+                state.clients;
+
+            container.innerHTML = `<div class="cards-grid">${clientsToShow.map(client => {
+                const tasks = client.tasks.filter(t => {
+                    if (state.filters.assignee && (!t.assignees || !t.assignees.includes(state.filters.assignee))) return false;
+                    return true;
+                });
+                const done = tasks.filter(t => t.completed).length;
+                const overdue = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length;
+                
+                return `
+                    <div class="card" data-id="client-${client.name}">
+                        <div class="card-header" onclick="toggleCard('client-${client.name}')" style="border-left: 4px solid ${client.color}">
+                            <div class="card-title">
+                                <span class="client-badge" style="background: ${client.color}20; color: ${client.color}">${client.name}</span>
                             </div>
-                            ${p.team.length ? `<div class="team-badges">${p.team.map((m,i)=>`<span class="team-badge"><span class="avatar" style="background:${colors[i%colors.length]}">${initials(m)}</span>${esc(m)}</span>`).join('')}</div>` : ''}
+                            <div class="card-meta">
+                                <div class="meta-item"><div class="meta-value">${client.programs.length}</div><div class="meta-label">Projects</div></div>
+                                <div class="meta-item"><div class="meta-value" style="color: ${overdue ? 'var(--accent-rose)' : 'var(--accent-emerald)'}">${overdue || done + '/' + tasks.length}</div><div class="meta-label">${overdue ? 'Overdue' : 'Tasks'}</div></div>
+                                <span class="expand-icon">▼</span>
+                            </div>
                         </div>
-                        <div class="tasks-section">
-                            <div class="tasks-header"><h4>Tasks</h4><span class="task-count">${done} of ${total}</span></div>
-                            ${p.tasks.length ? p.tasks.map(renderTask).join('') : '<p style="color:var(--text-muted);font-size:0.7rem">No tasks</p>'}
-                        </div>
-                    </div>
-                </div>`;
-        }
-
-        function renderTask(t) {
-            const over = t.dueDate && !t.completed && new Date(t.dueDate) < new Date();
-            const soon = t.dueDate && !t.completed && !over && (new Date(t.dueDate) - new Date()) < 3*24*60*60*1000;
-            return `
-                <div class="task-item priority-${t.priority}">
-                    <div class="task-checkbox ${t.completed?'completed':''}"></div>
-                    <div class="task-content">
-                        <div class="task-title ${t.completed?'completed':''}">${esc(t.name)}</div>
-                        <div class="task-meta">
-                            ${t.assignee?`<span>👤 ${esc(t.assignee)}</span>`:''}
-                            ${t.dueDate?`<span class="task-due ${over?'overdue':''} ${soon?'soon':''}">📅 ${fmtDate(t.dueDate)}${over?' (overdue)':''}</span>`:''}
+                        <div class="card-body">
+                            <div class="card-tasks">${tasks.filter(t => !t.completed).slice(0, 8).map(t => renderTaskItem(t, false)).join('') || '<p style="color: var(--text-muted); padding: 0.5rem;">No pending tasks</p>'}</div>
                         </div>
                     </div>
-                </div>`;
+                `;
+            }).join('')}</div>`;
         }
 
-        function renderLeadsView(container, programs, tasks) {
+        function renderProjectView(container, programs) {
+            if (!programs.length) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No projects match filters</p></div>';
+                return;
+            }
+
+            const statusLabels = { 'planning': 'Planning', 'on-track': 'On Track', 'at-risk': 'At Risk', 'on-hold': 'On Hold', 'completed': 'Completed' };
+
+            container.innerHTML = `<div class="cards-grid">${programs.map(p => {
+                const done = p.tasks.filter(t => t.completed).length;
+                const total = p.tasks.length;
+
+                return `
+                    <div class="card" data-id="project-${p.clientName}-${p.id}">
+                        <div class="card-header" onclick="toggleCard('project-${p.clientName}-${p.id}')" style="border-left: 4px solid ${p.clientColor}">
+                            <div class="card-title">
+                                <span class="client-badge" style="background: ${p.clientColor}20; color: ${p.clientColor}">${p.clientName}</span>
+                                ${esc(p.name)}
+                                <span class="status-badge status-${p.status}">${statusLabels[p.status] || 'Planning'}</span>
+                            </div>
+                            <div class="card-meta">
+                                <div class="meta-item"><div class="meta-value">${done}/${total}</div><div class="meta-label">Tasks</div></div>
+                                <div class="meta-item"><div class="meta-value">${p.lead || '—'}</div><div class="meta-label">Lead</div></div>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-tasks">${p.tasks.length ? p.tasks.map(t => renderTaskItem(t, false)).join('') : '<p style="color: var(--text-muted); padding: 0.5rem;">No tasks</p>'}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}</div>`;
+        }
+
+        function renderLeadView(container, programs, tasks) {
             const leads = {};
             programs.forEach(p => {
                 if (!p.lead) return;
-                if (!leads[p.lead]) {
-                    const tm = state.team.find(m => m.name === p.lead);
-                    leads[p.lead] = { name: p.lead, role: tm?.role || 'Project Lead', programs: [], entities: new Set() };
-                }
+                if (!leads[p.lead]) leads[p.lead] = { name: p.lead, programs: [], clients: new Set() };
                 leads[p.lead].programs.push(p);
-                leads[p.lead].entities.add(p.entity);
+                leads[p.lead].clients.add(p.clientName);
             });
-            const list = Object.values(leads).sort((a,b) => b.programs.length - a.programs.length);
-            if (!list.length) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No project leads found</p></div>'; return; }
-            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185'];
-            container.innerHTML = `<div class="lead-grid">${list.map((l,i) => {
-                const totalTasks = l.programs.reduce((sum, p) => sum + p.tasks.length, 0);
-                const doneTasks = l.programs.reduce((sum, p) => sum + p.tasks.filter(t => t.completed).length, 0);
-                const entityList = [...l.entities].map(e => e.toUpperCase()).join(', ');
+
+            const leadList = Object.values(leads).sort((a,b) => b.programs.length - a.programs.length);
+            
+            if (!leadList.length) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No leads found</p></div>';
+                return;
+            }
+
+            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185', '#2dd4bf'];
+
+            container.innerHTML = `<div class="person-grid">${leadList.map((lead, i) => {
+                const leadTasks = tasks.filter(t => lead.programs.some(p => p.name === t.programName && p.clientName === t.clientName));
+                const pending = leadTasks.filter(t => !t.completed).length;
+                const done = leadTasks.filter(t => t.completed).length;
+
                 return `
-                    <div class="lead-card">
-                        <div class="lead-header">
-                            <div class="lead-avatar" style="background:${colors[i%colors.length]}">${initials(l.name)}</div>
-                            <div class="lead-info"><h3>${esc(l.name)}</h3><div class="lead-role">${esc(l.role)} · ${entityList}</div></div>
-                            <div class="lead-stats">
-                                <div class="lead-stat"><div class="lead-stat-value" style="color:var(--accent-gold)">${l.programs.length}</div><div class="lead-stat-label">Projects</div></div>
-                                <div class="lead-stat"><div class="lead-stat-value" style="color:var(--accent-sky)">${totalTasks - doneTasks}</div><div class="lead-stat-label">Pending</div></div>
+                    <div class="person-card">
+                        <div class="person-header">
+                            <div class="person-avatar" style="background: ${colors[i % colors.length]}">${initials(lead.name)}</div>
+                            <div class="person-info">
+                                <h3>${esc(lead.name)}</h3>
+                                <div class="person-role">${[...lead.clients].join(', ')}</div>
+                            </div>
+                            <div class="person-stats">
+                                <div class="person-stat"><div class="person-stat-value" style="color: var(--accent-sky)">${lead.programs.length}</div><div class="person-stat-label">Projects</div></div>
+                                <div class="person-stat"><div class="person-stat-value" style="color: var(--accent-amber)">${pending}</div><div class="person-stat-label">Pending</div></div>
                             </div>
                         </div>
-                        <div class="lead-tasks">${l.programs.map(p=>`
-                            <div class="task-item" style="border-left-color: ${p.entity === 'ief' ? 'var(--accent-teal)' : 'var(--accent-gold)'}">
-                                <div class="task-content">
-                                    <div class="lead-task-program"><span class="entity-badge ${p.entity}">${p.entity.toUpperCase()}</span> ${esc(p.name)}</div>
-                                    <div class="task-meta"><span class="status-badge status-${p.status}">${p.status}</span> · ${p.tasks.filter(t=>t.completed).length}/${p.tasks.length} tasks</div>
-                                </div>
-                            </div>`).join('')}</div>
-                    </div>`;
+                        <div class="person-tasks">${lead.programs.map(p => `<div style="font-size: 0.65rem; padding: 0.3rem 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 0.25rem; border-left: 3px solid ${p.clientColor}"><span style="color: ${p.clientColor}">${p.clientName}</span> · ${p.name} <span class="status-badge status-${p.status}" style="margin-left: 0.3rem">${p.status}</span></div>`).join('')}</div>
+                    </div>
+                `;
             }).join('')}</div>`;
         }
 
-        function renderAssigneesView(container, tasks) {
+        function renderAssigneeView(container, tasks) {
             const assignees = {};
             tasks.forEach(t => {
                 if (!t.assignee) return;
-                if (!assignees[t.assignee]) {
-                    const tm = state.team.find(m => m.name === t.assignee);
-                    assignees[t.assignee] = { name: t.assignee, role: tm?.role || '', tasks: [], entities: new Set() };
-                }
+                if (!assignees[t.assignee]) assignees[t.assignee] = { name: t.assignee, tasks: [], clients: new Set() };
                 assignees[t.assignee].tasks.push(t);
-                assignees[t.assignee].entities.add(t.entity);
+                assignees[t.assignee].clients.add(t.clientName);
             });
-            const list = Object.values(assignees).sort((a,b) => b.tasks.filter(t=>!t.completed).length - a.tasks.filter(t=>!t.completed).length);
-            if (!list.length) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No task assignments</p></div>'; return; }
-            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185'];
-            container.innerHTML = `<div class="lead-grid">${list.map((l,i) => {
-                const done = l.tasks.filter(t=>t.completed).length;
-                const pending = l.tasks.length - done;
-                const overdue = l.tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length;
-                const entityList = [...l.entities].map(e => e.toUpperCase()).join(', ');
+
+            const assigneeList = Object.values(assignees).sort((a,b) => 
+                b.tasks.filter(t => !t.completed).length - a.tasks.filter(t => !t.completed).length
+            );
+
+            if (!assigneeList.length) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No assignees found</p></div>';
+                return;
+            }
+
+            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185', '#2dd4bf'];
+
+            container.innerHTML = `<div class="person-grid">${assigneeList.map((person, i) => {
+                const pending = person.tasks.filter(t => !t.completed).length;
+                const done = person.tasks.filter(t => t.completed).length;
+                const overdue = person.tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length;
+
                 return `
-                    <div class="lead-card">
-                        <div class="lead-header">
-                            <div class="lead-avatar" style="background:${colors[i%colors.length]}">${initials(l.name)}</div>
-                            <div class="lead-info"><h3>${esc(l.name)}</h3><div class="lead-role">${esc(l.role)} · ${entityList}</div></div>
-                            <div class="lead-stats">
-                                <div class="lead-stat"><div class="lead-stat-value" style="color:var(--accent-sky)">${pending}</div><div class="lead-stat-label">Pending</div></div>
-                                <div class="lead-stat"><div class="lead-stat-value" style="color:${overdue ? 'var(--accent-rose)' : 'var(--accent-emerald)'}">${overdue || done}</div><div class="lead-stat-label">${overdue ? 'Overdue' : 'Done'}</div></div>
+                    <div class="person-card">
+                        <div class="person-header">
+                            <div class="person-avatar" style="background: ${colors[i % colors.length]}">${initials(person.name)}</div>
+                            <div class="person-info">
+                                <h3>${esc(person.name)}</h3>
+                                <div class="person-role">${[...person.clients].join(', ')}</div>
+                            </div>
+                            <div class="person-stats">
+                                <div class="person-stat"><div class="person-stat-value" style="color: var(--accent-amber)">${pending}</div><div class="person-stat-label">Pending</div></div>
+                                <div class="person-stat"><div class="person-stat-value" style="color: ${overdue ? 'var(--accent-rose)' : 'var(--accent-emerald)'}">${overdue || done}</div><div class="person-stat-label">${overdue ? 'Overdue' : 'Done'}</div></div>
                             </div>
                         </div>
-                        <div class="lead-tasks">${l.tasks.filter(t=>!t.completed).map(t=>`
-                            <div class="task-item priority-${t.priority}" style="border-left-color: ${t.entity === 'ief' ? 'var(--accent-teal)' : 'var(--accent-gold)'}">
-                                <div class="task-checkbox"></div>
-                                <div class="task-content">
-                                    <div class="lead-task-program"><span class="entity-badge ${t.entity}">${t.entity.toUpperCase()}</span> ${esc(t.programName)}</div>
-                                    <div class="task-title">${esc(t.name)}</div>
-                                    ${t.dueDate?`<div class="task-meta"><span class="task-due ${isOver(t.dueDate)?'overdue':''}">📅 ${fmtDate(t.dueDate)}</span></div>`:''}
-                                </div>
-                            </div>`).join('')}</div>
-                    </div>`;
+                        <div class="person-tasks">${person.tasks.filter(t => !t.completed).map(t => renderTaskItem(t, false)).join('') || '<p style="color: var(--text-muted); padding: 0.5rem;">All caught up!</p>'}</div>
+                    </div>
+                `;
             }).join('')}</div>`;
         }
 
-        function renderTimelineView(container, tasks) {
-            const upcoming = tasks.filter(t => t.dueDate && !t.completed).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
-            if (!upcoming.length) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><p>No deadlines</p></div>'; return; }
-            const byMonth = {};
-            upcoming.forEach(t => {
-                const d = new Date(t.dueDate);
-                const key = `${d.getFullYear()}-${d.getMonth()}`;
-                const label = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                if (!byMonth[key]) byMonth[key] = { label, tasks: [] };
-                byMonth[key].tasks.push(t);
-            });
-            container.innerHTML = `<div class="timeline-view">${Object.values(byMonth).map(m => `
-                <div class="timeline-month">
-                    <div class="timeline-month-header">${m.label}</div>
-                    ${m.tasks.map(t => {
-                        const d = new Date(t.dueDate);
-                        const over = d < new Date();
-                        return `<div class="timeline-item">
-                            <span class="timeline-item-date" style="${over?'color:var(--accent-rose)':''}">${d.getDate()}</span>
-                            <span class="timeline-item-entity ${t.entity}">${t.entity.toUpperCase()}</span>
-                            <span style="flex:1">${esc(t.name)}</span>
-                            <span style="color:var(--text-muted);font-size:0.6rem">${esc(t.assignee||'')}</span>
-                        </div>`;
-                    }).join('')}
-                </div>`).join('')}</div>`;
-        }
+        function renderTaskView(container, tasks) {
+            if (!tasks.length) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><p>No tasks match filters</p></div>';
+                return;
+            }
 
-        function renderTasksView(container, tasks) {
-            if (!tasks.length) { container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><p>No tasks</p></div>'; return; }
             const sorted = [...tasks].sort((a,b) => {
                 if (a.completed !== b.completed) return a.completed ? 1 : -1;
                 if (a.dueDate && b.dueDate) return new Date(a.dueDate) - new Date(b.dueDate);
                 return a.dueDate ? -1 : 1;
             });
-            container.innerHTML = `<div class="programs-grid">${sorted.map(t => `
-                <div class="task-item priority-${t.priority}" style="background:var(--bg-card);padding:0.75rem;border-left:3px solid ${t.entity==='ief'?'var(--accent-teal)':'var(--accent-gold)'}">
-                    <div class="task-checkbox ${t.completed?'completed':''}"></div>
+
+            container.innerHTML = `<div class="cards-grid">${sorted.map(t => {
+                const isOverdue = !t.completed && t.dueDate && new Date(t.dueDate) < new Date();
+                return renderTaskItem(t, isOverdue);
+            }).join('')}</div>`;
+        }
+
+        function renderTimelineView(container, tasks) {
+            const upcoming = tasks.filter(t => t.dueDate && !t.completed).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+            if (!upcoming.length) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><p>No upcoming deadlines</p></div>';
+                return;
+            }
+
+            const byMonth = {};
+            upcoming.forEach(t => {
+                const d = new Date(t.dueDate);
+                const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, '0')}`;
+                const label = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                if (!byMonth[key]) byMonth[key] = { key, label, days: {} };
+                
+                const dayKey = d.toISOString().split('T')[0];
+                if (!byMonth[key].days[dayKey]) byMonth[key].days[dayKey] = [];
+                byMonth[key].days[dayKey].push(t);
+            });
+
+            container.innerHTML = `<div class="timeline-view">${Object.values(byMonth).sort((a,b) => a.key.localeCompare(b.key)).map(month => `
+                <div class="timeline-month">
+                    <div class="timeline-month-header">${month.label}</div>
+                    ${Object.entries(month.days).sort().map(([day, dayTasks]) => {
+                        const d = new Date(day);
+                        const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                        const isOverdue = d < new Date();
+                        return `
+                            <div class="timeline-day">
+                                <div class="timeline-day-header" style="${isOverdue ? 'color: var(--accent-rose)' : ''}">${dayLabel}</div>
+                                ${dayTasks.map(t => `
+                                    <div class="timeline-item" style="border-left: 3px solid ${t.clientColor}">
+                                        <span class="task-client" style="background: ${t.clientColor}20; color: ${t.clientColor}">${t.clientName}</span>
+                                        <span style="flex: 1">${esc(t.name)}</span>
+                                        <span style="color: var(--text-muted)">${esc(t.assignee || '')}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `).join('')}</div>`;
+        }
+
+        function renderTaskItem(task, isOverdue) {
+            const isSoon = !isOverdue && task.dueDate && (new Date(task.dueDate) - new Date()) < 3 * 24 * 60 * 60 * 1000;
+            
+            return `
+                <div class="task-item ${isOverdue ? 'overdue' : ''} priority-${task.priority}" style="border-left-color: ${task.clientColor || 'var(--accent-gold)'}">
+                    <div class="task-checkbox ${task.completed ? 'completed' : ''}"></div>
                     <div class="task-content">
-                        <div class="lead-task-program"><span class="entity-badge ${t.entity}">${t.entity.toUpperCase()}</span> ${esc(t.programName)}</div>
-                        <div class="task-title ${t.completed?'completed':''}">${esc(t.name)}</div>
+                        <div class="task-client" style="background: ${task.clientColor}20; color: ${task.clientColor}">${esc(task.clientName)}</div>
+                        <div class="task-project">${esc(task.programName)}</div>
+                        <div class="task-title ${task.completed ? 'completed' : ''}">${esc(task.name)}</div>
                         <div class="task-meta">
-                            ${t.assignee?`<span>👤 ${esc(t.assignee)}</span>`:''}
-                            ${t.dueDate?`<span class="task-due ${isOver(t.dueDate)&&!t.completed?'overdue':''}">📅 ${fmtDate(t.dueDate)}</span>`:''}
+                            ${task.assignee ? `<span>👤 ${esc(task.assignee)}</span>` : ''}
+                            ${task.dueDate ? `<span class="task-due ${isOverdue ? 'overdue' : ''} ${isSoon ? 'soon' : ''}">📅 ${fmtDate(task.dueDate)}${isOverdue ? ' (overdue)' : ''}</span>` : ''}
                         </div>
                     </div>
-                </div>`).join('')}</div>`;
+                </div>
+            `;
         }
 
         function renderSidebar() {
+            const { tasks } = getFilteredData();
+            const today = new Date(); today.setHours(0,0,0,0);
+
             // Deadlines
-            const container = document.getElementById('deadlines-list');
-            const badge = document.getElementById('deadline-count');
-            const upcoming = state.tasks.filter(t => t.dueDate && !t.completed).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate)).slice(0, 6);
-            const overdueCount = upcoming.filter(t => new Date(t.dueDate) < new Date()).length;
-            badge.textContent = overdueCount || upcoming.length;
-            badge.style.background = overdueCount ? 'var(--accent-rose)' : 'var(--accent-gold)';
-            container.innerHTML = upcoming.length ? upcoming.map(t => {
-                const d = new Date(t.dueDate);
-                const over = d < new Date();
-                return `<div class="deadline-item ${over?'overdue':''}">
-                    <div class="deadline-date"><div class="deadline-day">${d.getDate()}</div><div class="deadline-month">${d.toLocaleDateString('en-US',{month:'short'})}</div></div>
-                    <div class="deadline-content"><div class="deadline-task">${esc(t.name)}</div><div class="deadline-meta">${esc(t.programName)} · ${esc(t.assignee||'')}</div></div>
-                </div>`;
-            }).join('') : '<p style="color:var(--text-muted);font-size:0.7rem;text-align:center">No deadlines</p>';
+            const upcoming = tasks.filter(t => t.dueDate && !t.completed)
+                                 .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate))
+                                 .slice(0, 6);
+            const overdueCount = upcoming.filter(t => new Date(t.dueDate) < today).length;
             
-            // Workload
-            const wlContainer = document.getElementById('workload-list');
-            const wl = {};
-            state.tasks.forEach(t => {
-                if (!t.assignee) return;
-                if (!wl[t.assignee]) wl[t.assignee] = { total: 0, pending: 0 };
-                wl[t.assignee].total++;
-                if (!t.completed) wl[t.assignee].pending++;
-            });
-            const wlList = Object.entries(wl).map(([n,d]) => ({name:n,...d})).sort((a,b) => b.pending - a.pending).slice(0,5);
-            const maxP = Math.max(...wlList.map(w => w.pending), 1);
-            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185'];
-            wlContainer.innerHTML = wlList.length ? wlList.map((m,i) => {
-                const pct = (m.pending/maxP)*100;
-                const lvl = m.pending > 5 ? 'high' : m.pending > 2 ? 'medium' : 'low';
-                return `<div class="workload-item">
-                    <div class="workload-avatar" style="background:${colors[i%colors.length]}">${initials(m.name)}</div>
-                    <div class="workload-info"><div class="workload-name">${esc(m.name)}</div><div class="workload-tasks">${m.pending} pending</div></div>
-                    <div class="workload-bar"><div class="workload-fill ${lvl}" style="width:${pct}%"></div></div>
-                </div>`;
-            }).join('') : '<p style="color:var(--text-muted);font-size:0.7rem;text-align:center">No assignments</p>';
+            document.getElementById('deadline-count').textContent = overdueCount || upcoming.length;
+            document.getElementById('deadline-count').style.background = overdueCount ? 'var(--accent-rose)' : 'var(--accent-gold)';
+            
+            document.getElementById('deadlines-list').innerHTML = upcoming.length ? upcoming.map(t => {
+                const d = new Date(t.dueDate);
+                const over = d < today;
+                return `
+                    <div class="deadline-item ${over ? 'overdue' : ''}">
+                        <div class="deadline-date">
+                            <div class="deadline-day">${d.getDate()}</div>
+                            <div class="deadline-month">${d.toLocaleDateString('en-US', { month: 'short' })}</div>
+                        </div>
+                        <div class="deadline-content">
+                            <div class="deadline-client" style="background: ${t.clientColor}20; color: ${t.clientColor}">${esc(t.clientName)}</div>
+                            <div class="deadline-task">${esc(t.name)}</div>
+                            <div class="deadline-meta">${esc(t.assignee || '')}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('') : '<p style="color: var(--text-muted); text-align: center; font-size: 0.7rem;">No deadlines</p>';
+
+            // Client Health
+            document.getElementById('health-list').innerHTML = state.clients.map(client => {
+                const clientTasks = client.tasks.filter(t => {
+                    if (state.filters.assignee && t.assignee !== state.filters.assignee) return false;
+                    return true;
+                });
+                const overdue = clientTasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today).length;
+                let health = 'good', status = 'On track';
+                if (overdue > 2) { health = 'critical'; status = `${overdue} overdue`; }
+                else if (overdue > 0) { health = 'warning'; status = `${overdue} overdue`; }
+                else if (clientTasks.filter(t => !t.completed).length === 0) { status = 'All caught up'; }
+
+                return `
+                    <div class="health-item">
+                        <div class="health-logo" style="background: ${client.color}">${initials(client.name)}</div>
+                        <div class="health-info">
+                            <div class="health-name">${esc(client.name)}</div>
+                            <div class="health-status">${status}</div>
+                        </div>
+                        <div class="health-indicator ${health}"></div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function toggleProject(id) {
-            document.querySelector(`[data-id="${id}"]`).classList.toggle('expanded');
+        function toggleCard(id) {
+            document.querySelector(`[data-id="${id}"]`)?.classList.toggle('expanded');
         }
 
         // Utils
         function esc(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
         function fmtDate(s) { if (!s) return '—'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
-        function initials(n) { return n ? n.split(' ').map(x => x[0]).join('').toUpperCase().slice(0,2) : '?'; }
-        function isOver(s) { return s && new Date(s) < new Date(); }
+        function initials(n) { return n ? n.split(' ').map(x => x[0]).join('').toUpperCase().slice(0, 2) : '?'; }
     </script>
 </body>
 </html>
