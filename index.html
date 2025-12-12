@@ -1499,32 +1499,60 @@
         }
 
         function populateFilters() {
-            // Clients
+            // Clients (always show all)
             const clientSelect = document.getElementById('filter-client');
             clientSelect.innerHTML = '<option value="">All Clients</option>' +
                 state.clients.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-
-            // Projects
-            const allProjects = state.clients.flatMap(c => c.programs.map(p => p.name));
-            const uniqueProjects = [...new Set(allProjects)].sort();
+            
+            updateDependentFilters();
+        }
+        
+        function updateDependentFilters() {
+            const selectedClient = document.getElementById('filter-client').value;
+            
+            // Filter clients to use
+            const relevantClients = selectedClient 
+                ? state.clients.filter(c => c.name === selectedClient)
+                : state.clients;
+            
+            // Projects - only from selected client(s)
+            const allProjects = relevantClients.flatMap(c => c.programs.map(p => ({ name: p.name, client: c.name })));
+            const uniqueProjects = [...new Map(allProjects.map(p => [p.name, p])).values()].sort((a,b) => a.name.localeCompare(b.name));
+            const currentProject = document.getElementById('filter-project').value;
             document.getElementById('filter-project').innerHTML = '<option value="">All Projects</option>' +
-                uniqueProjects.map(p => `<option value="${p}">${p}</option>`).join('');
+                uniqueProjects.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            // Restore selection if still valid
+            if (uniqueProjects.some(p => p.name === currentProject)) {
+                document.getElementById('filter-project').value = currentProject;
+            }
 
-            // Leads & Assignees
-            const allPeople = new Set();
-            state.clients.forEach(c => {
-                c.programs.forEach(p => { if (p.lead) allPeople.add(p.lead); });
-                c.tasks.forEach(t => { if (t.assignee) allPeople.add(t.assignee); });
+            // Leads & Assignees - only from selected client(s)
+            const leads = new Set();
+            const assignees = new Set();
+            relevantClients.forEach(c => {
+                c.programs.forEach(p => { if (p.lead) leads.add(p.lead); });
+                c.tasks.forEach(t => { 
+                    if (t.assignee) assignees.add(t.assignee);
+                    if (t.assignees) t.assignees.forEach(a => assignees.add(a));
+                });
             });
-            const peopleList = [...allPeople].sort();
+            
+            const currentLead = document.getElementById('filter-lead').value;
+            const currentAssignee = document.getElementById('filter-assignee').value;
             
             document.getElementById('filter-lead').innerHTML = '<option value="">All Leads</option>' +
-                peopleList.map(p => `<option value="${p}">${p}</option>`).join('');
+                [...leads].sort().map(p => `<option value="${p}">${p}</option>`).join('');
             document.getElementById('filter-assignee').innerHTML = '<option value="">All Assignees</option>' +
-                peopleList.map(p => `<option value="${p}">${p}</option>`).join('');
+                [...assignees].sort().map(p => `<option value="${p}">${p}</option>`).join('');
+            
+            // Restore selections if still valid
+            if (leads.has(currentLead)) document.getElementById('filter-lead').value = currentLead;
+            if (assignees.has(currentAssignee)) document.getElementById('filter-assignee').value = currentAssignee;
         }
 
         function applyFilters() {
+            const clientChanged = state.filters.client !== document.getElementById('filter-client').value;
+            
             state.filters = {
                 client: document.getElementById('filter-client').value,
                 project: document.getElementById('filter-project').value,
@@ -1533,6 +1561,12 @@
                 status: document.getElementById('filter-status').value,
                 search: document.getElementById('search-input').value.toLowerCase()
             };
+            
+            // Update dependent dropdowns when client changes
+            if (clientChanged) {
+                updateDependentFilters();
+            }
+            
             renderAll();
         }
 
@@ -1544,6 +1578,7 @@
             document.getElementById('filter-status').value = '';
             document.getElementById('search-input').value = '';
             state.filters = { client: '', project: '', lead: '', assignee: '', status: '', search: '' };
+            updateDependentFilters();
             renderAll();
         }
 
