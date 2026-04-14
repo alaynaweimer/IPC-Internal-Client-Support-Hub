@@ -1,1697 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPC Consulting Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a24;
-            --bg-elevated: #22222e;
-            --accent-gold: #d4a853;
-            --accent-gold-dim: #b8923f;
-            --accent-emerald: #34d399;
-            --accent-rose: #fb7185;
-            --accent-sky: #38bdf8;
-            --accent-violet: #a78bfa;
-            --accent-amber: #fbbf24;
-            --accent-teal: #2dd4bf;
-            --text-primary: #f8f8f8;
-            --text-secondary: #9ca3af;
-            --text-muted: #6b7280;
-            --border-subtle: rgba(255,255,255,0.08);
-            --border-accent: rgba(212,168,83,0.3);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1900px;
-            margin: 0 auto;
-            padding: 1.25rem 1.75rem;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-violet));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-subtitle {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        /* Team Member Selector */
-        .team-selector {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--bg-card);
-            padding: 0.4rem 0.75rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-accent);
-        }
-
-        .team-selector-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .team-selector select {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 5px;
-            color: var(--accent-gold);
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.35rem 0.6rem;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-right: 0.5rem;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text-muted);
-        }
-
-        .status-dot.connected { background: var(--accent-emerald); }
-        .status-dot.partial { background: var(--accent-amber); }
-        .status-dot.error { background: var(--accent-rose); }
-
-        .btn {
-            padding: 0.45rem 0.85rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dim));
-            color: var(--bg-primary);
-        }
-
-        .btn-secondary {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .btn-icon {
-            padding: 0.4rem 0.5rem;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: 5px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        /* Quick Stats Bar */
-        .quick-stats {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--bg-card);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .quick-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .quick-stat-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .quick-stat-label {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
-        .quick-stat.gold .quick-stat-value { color: var(--accent-gold); }
-        .quick-stat.emerald .quick-stat-value { color: var(--accent-emerald); }
-        .quick-stat.rose .quick-stat-value { color: var(--accent-rose); }
-        .quick-stat.sky .quick-stat-value { color: var(--accent-sky); }
-        .quick-stat.amber .quick-stat-value { color: var(--accent-amber); }
-
-        /* Filter Bar */
-        .filter-bar {
-            display: flex;
-            gap: 0.6rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-            padding: 0.6rem 0.85rem;
-            background: var(--bg-card);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        .filter-label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .filter-select {
-            padding: 0.35rem 0.5rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 0.7rem;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            min-width: 120px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 150px;
-            max-width: 200px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 0.35rem 0.5rem 0.35rem 1.6rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 4px;
-            color: var(--text-primary);
-            font-size: 0.7rem;
-        }
-
-        .search-box::before {
-            content: '🔍';
-            position: absolute;
-            left: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.6rem;
-            opacity: 0.5;
-        }
-
-        .clear-filters {
-            font-size: 0.65rem;
-            color: var(--accent-gold);
-            background: none;
-            border: none;
-            cursor: pointer;
-            margin-left: auto;
-        }
-
-        /* View Tabs */
-        .view-tabs {
-            display: flex;
-            gap: 0.15rem;
-            background: var(--bg-card);
-            padding: 0.15rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            width: fit-content;
-        }
-
-        .view-tab {
-            padding: 0.4rem 0.75rem;
-            border-radius: 5px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-        }
-
-        .view-tab:hover { color: var(--text-primary); }
-
-        .view-tab.active {
-            background: var(--accent-gold);
-            color: var(--bg-primary);
-        }
-
-        /* Main Layout */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 1rem;
-        }
-
-        /* Content Area */
-        .content-area {
-            min-height: 400px;
-        }
-
-        /* Cards */
-        .cards-grid {
-            display: grid;
-            gap: 0.75rem;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border-subtle);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 0.75rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .card-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .client-badge {
-            font-size: 0.55rem;
-            padding: 0.12rem 0.4rem;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-
-        .status-badge {
-            padding: 0.15rem 0.45rem;
-            border-radius: 10px;
-            font-size: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-on-track { background: rgba(52,211,153,0.15); color: var(--accent-emerald); }
-        .status-at-risk { background: rgba(251,113,133,0.15); color: var(--accent-rose); }
-        .status-planning { background: rgba(167,139,250,0.15); color: var(--accent-violet); }
-        .status-completed { background: rgba(56,189,248,0.15); color: var(--accent-sky); }
-        .status-on-hold { background: rgba(251,191,36,0.15); color: var(--accent-amber); }
-
-        .card-meta {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .meta-item {
-            text-align: center;
-        }
-
-        .meta-value {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--accent-gold);
-        }
-
-        .meta-label {
-            font-size: 0.5rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .expand-icon {
-            color: var(--text-muted);
-            transition: transform 0.3s ease;
-            font-size: 0.8rem;
-        }
-
-        .card.expanded .expand-icon {
-            transform: rotate(180deg);
-        }
-
-        .card-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .card.expanded .card-body {
-            max-height: 1000px;
-        }
-
-        .card-tasks {
-            padding: 0.65rem 0.85rem;
-        }
-
-        /* Task Items */
-        .task-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            padding: 0.5rem 0.6rem;
-            background: var(--bg-secondary);
-            border-radius: 5px;
-            margin-bottom: 0.35rem;
-            border-left: 3px solid var(--accent-violet);
-        }
-
-        .task-item.overdue { border-left-color: var(--accent-rose); }
-        .task-item.priority-high { border-left-color: var(--accent-rose); }
-        .task-item.priority-medium { border-left-color: var(--accent-amber); }
-        .task-item.priority-low { border-left-color: var(--accent-emerald); }
-
-        .task-checkbox {
-            width: 14px;
-            height: 14px;
-            border: 2px solid var(--text-muted);
-            border-radius: 3px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .task-checkbox.completed {
-            background: var(--accent-emerald);
-            border-color: var(--accent-emerald);
-        }
-
-        .task-content { flex: 1; min-width: 0; }
-
-        .task-client {
-            font-size: 0.5rem;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            margin-bottom: 0.1rem;
-            display: inline-block;
-        }
-
-        .task-project {
-            font-size: 0.55rem;
-            color: var(--accent-violet);
-            margin-bottom: 0.1rem;
-        }
-
-        .task-title {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        .task-title.completed {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .task-meta {
-            display: flex;
-            gap: 0.5rem;
-            font-size: 0.55rem;
-            color: var(--text-muted);
-            margin-top: 0.15rem;
-        }
-
-        .task-due.overdue { color: var(--accent-rose); font-weight: 600; }
-        .task-due.soon { color: var(--accent-amber); }
-
-        .task-deliverables {
-            margin-top: 0.4rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-        }
-
-        .deliverable-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.5rem;
-            background: linear-gradient(135deg, var(--accent-emerald), var(--accent-sky));
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.6rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .deliverable-link:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(52, 211, 153, 0.3);
-        }
-
-        /* Person Cards */
-        .person-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 0.75rem;
-        }
-
-        .person-card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border-subtle);
-            overflow: hidden;
-        }
-
-        .person-header {
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .person-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--bg-primary);
-        }
-
-        .person-info h3 {
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .person-role {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
-
-        .person-stats {
-            display: flex;
-            gap: 0.5rem;
-            margin-left: auto;
-        }
-
-        .person-stat {
-            text-align: center;
-        }
-
-        .person-stat-value {
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
-
-        .person-stat-label {
-            font-size: 0.5rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .person-tasks {
-            padding: 0.6rem 0.75rem;
-            max-height: 280px;
-            overflow-y: auto;
-        }
-
-        /* Timeline */
-        .timeline-view {
-            background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border-subtle);
-            padding: 1rem;
-        }
-
-        .timeline-month {
-            margin-bottom: 1rem;
-        }
-
-        .timeline-month-header {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--accent-gold);
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.3rem;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .timeline-day {
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-day-header {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
-
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.35rem 0.5rem;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            font-size: 0.65rem;
-            margin-bottom: 0.2rem;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .sidebar-card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border-subtle);
-            padding: 0.85rem;
-        }
-
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
-        }
-
-        .sidebar-header h3 {
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .sidebar-badge {
-            font-size: 0.55rem;
-            padding: 0.1rem 0.35rem;
-            background: var(--accent-rose);
-            color: white;
-            border-radius: 8px;
-        }
-
-        .deadline-item {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .deadline-item:last-child { border-bottom: none; }
-
-        .deadline-date {
-            text-align: right;
-            min-width: 28px;
-        }
-
-        .deadline-day {
-            font-size: 0.85rem;
-            font-weight: 700;
-            font-family: 'Playfair Display', serif;
-            color: var(--accent-gold);
-        }
-
-        .deadline-month {
-            font-size: 0.45rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .deadline-content { flex: 1; }
-
-        .deadline-client {
-            font-size: 0.5rem;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            display: inline-block;
-            margin-bottom: 0.1rem;
-        }
-
-        .deadline-task {
-            font-size: 0.65rem;
-            font-weight: 500;
-        }
-
-        .deadline-meta {
-            font-size: 0.5rem;
-            color: var(--text-muted);
-        }
-
-        .deadline-item.overdue .deadline-day { color: var(--accent-rose); }
-
-        /* Client Health */
-        .health-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .health-item:last-child { border-bottom: none; }
-
-        .health-logo {
-            width: 24px;
-            height: 24px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.55rem;
-            font-weight: 600;
-            color: var(--bg-primary);
-        }
-
-        .health-info { flex: 1; }
-
-        .health-name {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        .health-status {
-            font-size: 0.55rem;
-            color: var(--text-muted);
-        }
-
-        .health-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .health-indicator.good { background: var(--accent-emerald); }
-        .health-indicator.warning { background: var(--accent-amber); }
-        .health-indicator.critical { background: var(--accent-rose); }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-        }
-
-        .empty-state-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            opacity: 0.5;
-        }
-
-        /* Welcome State */
-        .welcome-state {
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .welcome-state h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--accent-gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-state p {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-layout { grid-template-columns: 1fr; }
-            .sidebar { display: grid; grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            .header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-            .header-left { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-            .filter-bar { flex-direction: column; align-items: stretch; }
-            .sidebar { grid-template-columns: 1fr; }
-        }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In Reach — Sarah Curl</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:#0d1b2a;min-height:100vh;display:flex;align-items:center;justify-content:center}
+
+/* PIN SCREEN */
+.pin-screen{width:100%;max-width:380px;padding:40px 24px;text-align:center}
+.pin-logo{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#0a5c48,#1aa382);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Instrument Serif',serif;font-size:24px;color:#fff}
+.pin-title{font-family:'Instrument Serif',serif;font-size:28px;color:#fff;margin-bottom:6px}
+.pin-sub{font-size:13px;color:#64748b;margin-bottom:32px}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:24px}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:#1e2d3d;border:2px solid #334155;transition:all .2s}
+.pin-dot.filled{background:#1aa382;border-color:#1aa382}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto 16px}
+.pin-btn{padding:18px;background:#1e2d3d;border:1px solid #334155;border-radius:12px;font-family:'Sora',sans-serif;font-size:20px;font-weight:500;color:#fff;cursor:pointer;transition:all .15s}
+.pin-btn:hover{background:#253545;border-color:#1aa382}
+.pin-btn:active{transform:scale(.95)}
+.pin-error{color:#e11d48;font-size:13px;margin-top:12px;min-height:20px}
+
+/* DASHBOARD */
+.dashboard{display:none;width:100%;max-width:480px;min-height:100vh;background:#f0f4f8;flex-direction:column}
+.dashboard.visible{display:flex}
+
+.hdr{background:linear-gradient(160deg,#0d1b2a 0%,#1a3a5c 60%,#0a5c48 100%);padding:24px 20px 20px}
+.hdr-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1aa382,#0a5c48);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:18px;color:#fff;flex-shrink:0}
+.hdr-name{font-family:'Instrument Serif',serif;font-size:24px;color:#fff;line-height:1;margin-bottom:4px}
+.hdr-meta{font-size:12px;color:rgba(255,255,255,.5)}
+.hdr-meta span{color:rgba(255,255,255,.8);font-weight:500}
+.live-dot{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.5);align-self:flex-start;padding-top:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:#1aa382;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.search-bar{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.search-bar-dot{width:8px;height:8px;border-radius:50%;background:#1aa382}
+.search-bar-text{font-size:13px;color:rgba(255,255,255,.4)}
+
+.tabs{display:flex;background:#fff;border-bottom:1px solid #e2e8f0}
+.tab{flex:1;padding:14px;text-align:center;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s}
+.tab.active{color:#0a5c48;border-bottom-color:#1aa382}
+
+.phases{display:flex;padding:10px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;overflow-x:auto;scrollbar-width:none;gap:0}
+.phases::-webkit-scrollbar{display:none}
+.phase{display:flex;align-items:center;gap:5px;font-size:10px;color:#94a3b8;white-space:nowrap;padding-right:12px}
+.phase-dot{width:7px;height:7px;border-radius:50%;background:#1aa382}
+.phase-dot.dim{background:#cbd5e1}
+.phase-sep{color:#cbd5e1;font-size:10px;padding-right:12px}
+
+.content{flex:1}
+.view{display:none;padding-bottom:24px}
+.view.active{display:block}
+
+.sec-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;padding:16px 16px 8px;display:flex;justify-content:space-between}
+
+.snap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.snap-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;cursor:default}
+.snap-icon{font-size:18px;margin-bottom:8px}
+.snap-val{font-family:'Instrument Serif',serif;font-size:28px;color:#0f172a;line-height:1;margin-bottom:3px}
+.snap-val.teal{color:#0a5c48}
+.snap-val.orange{color:#d97706}
+.snap-lbl{font-size:11px;color:#64748b}
+.snap-sub{font-size:10px;font-weight:600;color:#1aa382;margin-top:3px}
+.snap-soon{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8;margin-top:6px;padding:3px 8px;background:#f1f5f9;border-radius:20px}
+
+.bill-box{margin:12px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden}
+.bill-hdr{padding:14px 16px 0;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#94a3b8}
+
+.gauge-wrap{padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-end}
+.gauge-center{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);text-align:center;width:120px}
+.gauge-hrs{font-family:'Instrument Serif',serif;font-size:28px;color:#0f172a;line-height:1}
+.gauge-lbl{font-size:10px;color:#94a3b8;margin-top:2px}
+.gauge-status{font-size:11px;font-weight:600;color:#1aa382;margin-top:3px}
+.gauge-svg-wrap{position:relative;flex-shrink:0}
+
+.tier-markers{display:flex;flex-direction:column;gap:4px;padding-bottom:8px}
+.tier-mark{display:flex;align-items:center;gap:6px;font-size:10px;color:#64748b}
+.tier-line{width:16px;height:2px;border-radius:1px}
+
+.pace-row{display:flex;justify-content:space-between;padding:8px 16px 12px;font-size:11px}
+.pace-left{color:#1aa382;font-weight:600}
+.pace-right{color:#64748b}
+
+.tier-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px}
+.tier-box{border:1px solid #e2e8f0;border-radius:10px;padding:12px 8px;text-align:center}
+.tier-box-val{font-family:'Instrument Serif',serif;font-size:20px;color:#0f172a;line-height:1}
+.tier-box-val.teal{color:#0a5c48}
+.tier-box-lbl{font-size:10px;color:#64748b;margin-top:3px}
+
+.earn-card{margin:8px 16px 0;background:#e8f7f3;border:1px solid #c2eadf;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.earn-left{display:flex;align-items:center;gap:10px}
+.earn-icon{font-size:20px}
+.earn-title{font-size:13px;font-weight:600;color:#0a5c48}
+.earn-sub{font-size:11px;color:#64748b;margin-top:2px}
+
+.details-btn{width:calc(100% - 32px);margin:8px 16px 0;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
+.detail-panel{display:none;margin:8px 16px 0;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}
+.detail-panel.open{display:block}
+.detail-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:13px}
+.detail-row:last-child{border:none}
+.dl{color:#64748b}
+.dv{font-weight:500;color:#0f172a}
+
+/* Resources */
+.resource-search{margin:12px 16px 0;position:relative}
+.resource-search input{width:100%;padding:12px 16px 12px 40px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;font-family:'Sora',sans-serif;font-size:13px;color:#0f172a;outline:none}
+.resource-search input:focus{border-color:#1aa382}
+.resource-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8}
+.resource-group{margin:10px 16px 0;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden}
+.resource-group-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.resource-group-hdr.open{border-bottom:1px solid #f1f5f9}
+.resource-group-left{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#0f172a}
+.resource-group-arrow{font-size:11px;color:#94a3b8;transition:transform .2s}
+.resource-group-arrow.open{transform:rotate(180deg)}
+.resource-items{display:none}
+.resource-items.open{display:block}
+.resource-item{display:flex;align-items:center;padding:11px 16px;border-bottom:1px solid #f8fafc;font-size:13px;color:#475569;cursor:pointer;transition:background .1s;text-decoration:none}
+.resource-item:last-child{border:none}
+.resource-item:hover{background:#f8fafc;color:#0a5c48}
+.resource-soon{font-size:10px;color:#94a3b8;background:#f1f5f9;padding:2px 7px;border-radius:10px;margin-left:auto}
+
+.loading-wrap{padding:40px 20px;text-align:center}
+.spinner{width:28px;height:28px;border-radius:50%;border:3px solid #e2e8f0;border-top-color:#1aa382;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px;color:#94a3b8}
+.error-wrap{margin:16px;padding:14px;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;font-size:13px;color:#e11d48}
+</style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="header-left">
-                <div>
-                    <h1>🎯 IPC Consulting Hub</h1>
-                    <p class="header-subtitle">Ignite Positive Changes • Client Dashboard</p>
-                </div>
-                <div class="team-selector">
-                    <span class="team-selector-label">Viewing as:</span>
-                    <select id="team-member-select" onchange="switchTeamMember()">
-                        <option value="all">Everyone (All Tasks)</option>
-                    </select>
-                </div>
-            </div>
-            <div class="header-actions">
-                <div class="connection-status">
-                    <span class="status-dot" id="status-dot"></span>
-                    <span id="status-text">Not connected</span>
-                </div>
-                <button class="btn-icon" onclick="loadData()" title="Refresh">↻</button>
-                <a class="btn btn-primary" id="sheet-link" href="#" target="_blank" style="display: none;">📊 Sheet</a>
-            </div>
-        </header>
 
-        <!-- Dashboard Content (hidden until connected) -->
-        <div id="dashboard-content" style="display: none;">
-            <!-- Quick Stats -->
-            <div class="quick-stats" id="quick-stats">
-                <div class="quick-stat gold">
-                    <span class="quick-stat-value" id="qs-clients">0</span>
-                    <span class="quick-stat-label">Clients</span>
-                </div>
-                <div class="quick-stat sky">
-                    <span class="quick-stat-value" id="qs-projects">0</span>
-                    <span class="quick-stat-label">Projects</span>
-                </div>
-                <div class="quick-stat emerald">
-                    <span class="quick-stat-value" id="qs-complete">0</span>
-                    <span class="quick-stat-label">Complete</span>
-                </div>
-                <div class="quick-stat amber">
-                    <span class="quick-stat-value" id="qs-progress">0</span>
-                    <span class="quick-stat-label">In Progress</span>
-                </div>
-                <div class="quick-stat rose">
-                    <span class="quick-stat-value" id="qs-overdue">0</span>
-                    <span class="quick-stat-label">Overdue</span>
-                </div>
-            </div>
+<!-- PIN SCREEN -->
+<div class="pin-screen" id="pinScreen">
+  <div class="pin-logo">SC</div>
+  <div class="pin-title">Sarah Curl</div>
+  <div class="pin-sub">Enter your 4-digit PIN to access your dashboard</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinClear()" style="font-size:13px;color:#64748b">Clear</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinBack()" style="font-size:18px">⌫</button>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+</div>
 
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <div class="filter-group">
-                    <span class="filter-label">Client</span>
-                    <select class="filter-select" id="filter-client" onchange="applyFilters()">
-                        <option value="">All Clients</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Project</span>
-                    <select class="filter-select" id="filter-project" onchange="applyFilters()">
-                        <option value="">All Projects</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Lead</span>
-                    <select class="filter-select" id="filter-lead" onchange="applyFilters()">
-                        <option value="">All Leads</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Assignee</span>
-                    <select class="filter-select" id="filter-assignee" onchange="applyFilters()">
-                        <option value="">All Assignees</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Status</span>
-                    <select class="filter-select" id="filter-status" onchange="applyFilters()">
-                        <option value="">All</option>
-                        <option value="not-complete">Not Complete</option>
-                        <option value="overdue">Overdue</option>
-                        <option value="this-week">Due This Week</option>
-                        <option value="this-month">Due This Month</option>
-                    </select>
-                </div>
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Search..." oninput="applyFilters()">
-                </div>
-                <button class="clear-filters" onclick="clearFilters()">Clear All</button>
-            </div>
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="avatar">SC</div>
+      <div style="flex:1">
+        <div class="hdr-name">Sarah Curl</div>
+        <div class="hdr-meta">FairShare Level: <span id="hdrTrack">Coastal PT</span> · <span id="hdrQtr">Q2 2026</span></div>
+      </div>
+      <div class="live-dot"><div class="dot"></div><span id="liveStatus">Live</span></div>
+    </div>
+    <div class="search-bar" onclick="alert('AI search — coming in Phase 3!')">
+      <div class="search-bar-dot"></div>
+      <span class="search-bar-text">What do you need help with?</span>
+    </div>
+  </div>
 
-            <!-- View Tabs -->
-            <div class="view-tabs">
-                <button class="view-tab active" data-view="overview" onclick="switchView('overview')">Overview</button>
-                <button class="view-tab" data-view="client" onclick="switchView('client')">By Client</button>
-                <button class="view-tab" data-view="project" onclick="switchView('project')">By Project</button>
-                <button class="view-tab" data-view="lead" onclick="switchView('lead')">By Lead</button>
-                <button class="view-tab" data-view="assignee" onclick="switchView('assignee')">By Assignee</button>
-                <button class="view-tab" data-view="task" onclick="switchView('task')">All Tasks</button>
-                <button class="view-tab" data-view="timeline" onclick="switchView('timeline')">Timeline</button>
-            </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('dashboard',this)">📊 Dashboard</div>
+    <div class="tab" onclick="switchTab('resources',this)">📁 Resources</div>
+  </div>
 
-            <!-- Main Layout -->
-            <div class="main-layout">
-                <div class="content-area" id="content-area"></div>
-                <div class="sidebar">
-                    <div class="sidebar-card">
-                        <div class="sidebar-header">
-                            <h3>⚡ Deadlines</h3>
-                            <span class="sidebar-badge" id="deadline-count">0</span>
-                        </div>
-                        <div id="deadlines-list"></div>
-                    </div>
-                    <div class="sidebar-card">
-                        <div class="sidebar-header">
-                            <h3>💚 Client Health</h3>
-                        </div>
-                        <div id="health-list"></div>
-                    </div>
-                </div>
-            </div>
+  <div class="phases">
+    <div class="phase"><div class="phase-dot"></div>Phase 1 — Live Stats</div>
+    <div class="phase-sep">›</div>
+    <div class="phase"><div class="phase-dot dim"></div>Phase 2 — Service Mix</div>
+    <div class="phase-sep">›</div>
+    <div class="phase"><div class="phase-dot dim"></div>Phase 3 — AI Search</div>
+  </div>
+
+  <div class="content">
+    <div class="view active" id="view-dashboard">
+      <div id="loadingWrap" class="loading-wrap">
+        <div class="spinner"></div>
+        <div class="loading-txt">Loading your stats…</div>
+      </div>
+
+      <div id="mainContent" style="display:none">
+        <div class="sec-label">Snapshot <span id="weekLabel"></span></div>
+        <div class="snap-grid">
+          <div class="snap-card">
+            <div class="snap-icon">📅</div>
+            <div class="snap-val teal" id="snapWkly">—</div>
+            <div class="snap-lbl">Weekly Schedule</div>
+            <div class="snap-sub">hrs expected</div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">💰</div>
+            <div class="snap-val teal" id="snapPay">—</div>
+            <div class="snap-lbl">Next Paycheck</div>
+            <div class="snap-sub" id="snapPayDays"></div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">📊</div>
+            <div class="snap-val orange">—</div>
+            <div class="snap-lbl">Cancel Rate</div>
+            <div class="snap-soon">Phase 2</div>
+          </div>
+          <div class="snap-card">
+            <div class="snap-icon">🎯</div>
+            <div class="snap-val" style="font-size:14px;color:#94a3b8;padding-top:4px">Coming Soon</div>
+            <div class="snap-lbl">Service Mix</div>
+            <div class="snap-soon">Phase 2</div>
+          </div>
         </div>
 
-        <!-- Welcome State -->
-        <div class="welcome-state" id="welcome-state">
-            <h2>Loading...</h2>
-            <p>Connecting to Google Sheet...</p>
+        <div class="bill-box">
+          <div class="bill-hdr">Billable Hours</div>
+          <div class="gauge-wrap">
+            <div class="gauge-svg-wrap">
+              <svg width="180" height="100" viewBox="0 0 180 100">
+                <path d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="#e2e8f0" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugeFill" d="M 20 95 A 70 70 0 0 1 160 95" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"/>
+                <line id="gaugeNeedle" x1="90" y1="90" x2="90" y2="30" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90,90,90)"/>
+                <circle cx="90" cy="90" r="5" fill="#0f172a"/>
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-hrs" id="gaugeHrs">—</div>
+                <div class="gauge-lbl">billable hours</div>
+                <div class="gauge-status" id="gaugeStatus">—</div>
+              </div>
+            </div>
+            <div class="tier-markers">
+              <div class="tier-mark"><div class="tier-line" style="background:#ef4444"></div><span id="mMin">—</span></div>
+              <div class="tier-mark" style="margin-left:22px;color:#94a3b8">Minimum</div>
+              <div class="tier-mark"><div class="tier-line" style="background:#1aa382"></div><span id="mT1">—</span></div>
+              <div class="tier-mark" style="margin-left:22px;color:#94a3b8">Tier 1</div>
+              <div class="tier-mark"><div class="tier-line" style="background:#0a5c48"></div><span id="mT2">—</span></div>
+            </div>
+          </div>
+          <div class="pace-row">
+            <span class="pace-left" id="paceLeft">—</span>
+            <span class="pace-right" id="paceRight">—</span>
+          </div>
+          <div class="tier-grid">
+            <div class="tier-box"><div class="tier-box-val" id="tMin">—</div><div class="tier-box-lbl">hrs to Minimum</div></div>
+            <div class="tier-box"><div class="tier-box-val teal" id="tT1">—</div><div class="tier-box-lbl">hrs to Tier 1</div></div>
+            <div class="tier-box"><div class="tier-box-val" style="color:#8b5cf6" id="tT2">—</div><div class="tier-box-lbl">hrs to Tier 2</div></div>
+          </div>
         </div>
+
+        <div class="earn-card" onclick="alert('Earnings calculator — coming soon!')">
+          <div class="earn-left">
+            <div class="earn-icon">💵</div>
+            <div>
+              <div class="earn-title">Earnings Calculator</div>
+              <div class="earn-sub">How many hours do I need to earn my goal?</div>
+            </div>
+          </div>
+          <span style="color:#1aa382;font-size:16px">→</span>
+        </div>
+
+        <button class="details-btn" id="detBtn" onclick="toggleDetails()">📋 See full breakdown ▾</button>
+        <div class="detail-panel" id="detPanel">
+          <div class="detail-row"><span class="dl">QCHE Target (100%)</span><span class="dv" id="dQche">—</span></div>
+          <div class="detail-row"><span class="dl">QCompleted (w/ credits)</span><span class="dv" id="dComp">—</span></div>
+          <div class="detail-row"><span class="dl">Tier Status</span><span class="dv" id="dTier">—</span></div>
+          <div class="detail-row"><span class="dl">Estimated Bonus</span><span class="dv" id="dBonus">—</span></div>
+          <div class="detail-row"><span class="dl">Weeks Left</span><span class="dv" id="dWeeks">—</span></div>
+          <div class="detail-row"><span class="dl">Last Updated</span><span class="dv" id="dSync">—</span></div>
+        </div>
+      </div>
+      <div id="errorWrap" class="error-wrap" style="display:none"></div>
     </div>
 
-    <script>
-        // Configuration
-        const CONFIG = {
-            SHEET_ID: '1vZSLqWO88_GyscAqwVoeVLGwb6FT1JKMCxOR8maU-9I',
-            PROGRAMS_TAB: 'Programs',
-            TASKS_TAB: 'Tasks',
-            TEAM_TAB: 'Team',
-            INTERNAL_CLIENTS: ['IPC', 'IEF']
-        };
+    <div class="view" id="view-resources">
+      <div class="resource-search">
+        <span class="resource-search-icon">🔍</span>
+        <input type="text" placeholder="Search resources…" oninput="filterResources(this.value)">
+      </div>
 
-        // Client colors
-        const CLIENT_COLORS = {
-            'Treehouse Therapies': '#4A90A4',
-            'In Reach Therapy': '#6B8E23',
-            'Liberation Firearms': '#8B4513',
-            'Central Oregon Locavore': '#2E8B57'
-        };
-        const DEFAULT_COLOR = '#a78bfa';
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">📋 HR &amp; Benefits</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="Employee Handbook">→ Employee Handbook <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Benefits Overview">→ Benefits Overview <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="PTO Policy">→ PTO Policy <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="FMLA">→ FMLA Information <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
 
-        function getClientColor(clientName) {
-            return CLIENT_COLORS[clientName] || DEFAULT_COLOR;
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">💚 FairShare Initiative</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="https://www.notion.so/inreach/The-FairShare-Initiative-740f3c341c62422e96aaaf6771e9735f" target="_blank" data-name="FairShare Overview">→ FairShare Overview</a>
+          <a class="resource-item" href="#" data-name="Pay Structure">→ Pay Structure Guide <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Bonus Calculator">→ Bonus Calculator <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">🩺 Clinical Processes</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="Clinical Guidelines">→ Clinical Guidelines <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Re-eval">→ Re-eval Process <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="TX Plan">→ TX Plan Updates <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">📅 Scheduling</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="My Schedule">→ My Scheduling Link <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="PracticeQ">→ PracticeQ <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Time Off">→ Request Time Off <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+
+      <div class="resource-group">
+        <div class="resource-group-hdr" onclick="toggleGroup(this)">
+          <div class="resource-group-left">💳 Billing &amp; Docs</div>
+          <div class="resource-group-arrow">▼</div>
+        </div>
+        <div class="resource-items">
+          <a class="resource-item" href="#" data-name="Billing">→ Billing Guidelines <span class="resource-soon">Coming Soon</span></a>
+          <a class="resource-item" href="#" data-name="Documentation">→ Documentation Templates <span class="resource-soon">Coming Soon</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SHEET_ID  = "1lvFHQlFl-8amepEhOELDNvXTB6TcEJ7lvvfV8vyDTk4";
+var SHEET_TAB = "SUMMARY";
+var MY_NAME   = "Sarah Curl";
+var MY_PIN    = "8485";
+
+// ── PIN ──────────────────────────────────────────────────
+var pinEntered = "";
+function pinPress(d) {
+  if (pinEntered.length >= 4) return;
+  pinEntered += d;
+  document.getElementById('d'+(pinEntered.length-1)).classList.add('filled');
+  if (pinEntered.length === 4) setTimeout(checkPin, 200);
+}
+function pinBack() {
+  if (!pinEntered.length) return;
+  pinEntered = pinEntered.slice(0,-1);
+  document.getElementById('d'+pinEntered.length).classList.remove('filled');
+}
+function pinClear() {
+  pinEntered = "";
+  for(var i=0;i<4;i++) document.getElementById('d'+i).classList.remove('filled');
+  document.getElementById('pinError').textContent = "";
+}
+function checkPin() {
+  if (pinEntered === MY_PIN) {
+    document.getElementById('pinScreen').style.display = 'none';
+    document.body.style.background = '#f0f4f8';
+    document.getElementById('dashboard').classList.add('visible');
+    loadData();
+  } else {
+    document.getElementById('pinError').textContent = "Incorrect PIN — try again";
+    pinClear();
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('view-'+name).classList.add('active');
+}
+
+function toggleDetails() {
+  var open = document.getElementById('detPanel').classList.toggle('open');
+  document.getElementById('detBtn').textContent = open ? '📋 Hide breakdown ▴' : '📋 See full breakdown ▾';
+}
+
+function toggleGroup(hdr) {
+  var items = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.resource-group-arrow');
+  var open  = items.classList.toggle('open');
+  hdr.classList.toggle('open', open);
+  arrow.classList.toggle('open', open);
+}
+
+function filterResources(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.resource-item').forEach(function(item) {
+    var name = (item.getAttribute('data-name') || '').toLowerCase();
+    item.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+
+// ── NEXT PAY DATE (Friday bi-weekly) ─────────────────────
+function nextPayDate() {
+  var anchor = new Date(2026, 3, 17);
+  var today  = new Date();
+  while (anchor <= today) anchor.setDate(anchor.getDate() + 14);
+  return anchor;
+}
+
+// ── GAUGE ─────────────────────────────────────────────────
+function updateGauge(pct) {
+  var maxPct = 120;
+  var angle  = (Math.min(pct, maxPct) / maxPct * 180) - 90;
+  document.getElementById('gaugeNeedle').setAttribute('transform','rotate('+angle+',90,90)');
+  var totalLen = 220;
+  var fillLen  = Math.min(pct/maxPct, 1) * totalLen;
+  var color = pct>=101?'#0a5c48':pct>=97?'#1aa382':pct>=96?'#f59e0b':'#ef4444';
+  var fill = document.getElementById('gaugeFill');
+  fill.setAttribute('stroke-dashoffset', (totalLen-fillLen).toString());
+  fill.setAttribute('stroke', color);
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function render(d) {
+  var ch    = parseFloat(d.client_hrs)   || 0;
+  var qche  = parseFloat(d.qche_100)     || 0;
+  var qcomp = parseFloat(d.qcompleted)   || 0;
+  var pct   = qche > 0 ? ch/qche*100 : 0;
+  var wkly  = parseFloat(d.weekly_hrs)   || 0;
+  var weeks = parseFloat(d.weeks_left)   || 0;
+  var bonus = parseFloat(d.total_bonus)  || 0;
+  var tier  = d.tier_status || '';
+  var track = d.track       || 'Coastal PT';
+  var qtr   = d.current_quarter || 'Q2';
+  var yr    = d.year        || 2026;
+  var q96   = qche * 0.96;
+  var q97   = qche * 0.97;
+
+  document.getElementById('hdrTrack').textContent = track;
+  document.getElementById('hdrQtr').textContent   = qtr + ' ' + yr;
+  document.getElementById('liveStatus').textContent = 'Live';
+  document.getElementById('snapWkly').textContent  = wkly;
+
+  var pay  = nextPayDate();
+  var days = Math.ceil((pay - new Date()) / 86400000);
+  document.getElementById('snapPay').textContent    = pay.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  document.getElementById('snapPayDays').textContent = 'IN '+days+' DAYS';
+  document.getElementById('weekLabel').textContent   = weeks > 0 ? 'Week '+(13-weeks)+' of 13' : '';
+
+  updateGauge(pct);
+  document.getElementById('gaugeHrs').textContent    = ch;
+  document.getElementById('gaugeStatus').textContent =
+    pct>=101?'Tier 2 Bonus! 🏆':pct>=97?'Tier 1 Bonus ✅':pct>=96?'Minimum Met ✅':pct>=80?'On Track ⚡':'Behind 🔴';
+
+  document.getElementById('mMin').textContent = Math.round(q96)+' hrs';
+  document.getElementById('mT1').textContent  = Math.round(q97)+' hrs';
+  document.getElementById('mT2').textContent  = Math.round(qche+1)+' hrs';
+
+  var hrsToMin = Math.max(0, q96-ch).toFixed(1);
+  var hrsToT1  = Math.max(0, q97-ch).toFixed(1);
+  var hrsToT2  = Math.max(0, qche+1-ch).toFixed(1);
+  var wklyNeed = weeks>0 ? (parseFloat(hrsToT1)/weeks).toFixed(1) : 0;
+
+  document.getElementById('paceLeft').textContent  = pct>=97?'On Pace 🎯':pct>=96?'Minimum Met':'Needs Focus';
+  document.getElementById('paceRight').textContent = weeks>0?'Need '+wklyNeed+' hrs/wk for Tier 1':'';
+  document.getElementById('tMin').textContent = hrsToMin;
+  document.getElementById('tT1').textContent  = hrsToT1;
+  document.getElementById('tT2').textContent  = hrsToT2;
+
+  document.getElementById('dQche').textContent  = qche+' hrs';
+  document.getElementById('dComp').textContent  = qcomp+' hrs';
+  document.getElementById('dTier').textContent  = tier||'—';
+  document.getElementById('dBonus').textContent = bonus>0?'$'+bonus.toLocaleString():'None yet';
+  document.getElementById('dWeeks').textContent = weeks+' weeks';
+  document.getElementById('dSync').textContent  = d.last_updated||'—';
+
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+function showError(msg) {
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('errorWrap').style.display   = 'block';
+  document.getElementById('errorWrap').textContent     = '⚠️ '+msg;
+}
+
+// ── LOAD FROM GOOGLE SHEET DIRECTLY ──────────────────────
+function loadData() {
+  var url = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet='+encodeURIComponent(SHEET_TAB);
+
+  fetch(url)
+    .then(function(r){ return r.text(); })
+    .then(function(text) {
+      // Google wraps response in google.visualization.Query.setResponse(...)
+      var match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+      if (!match) { showError('Could not parse sheet data'); return; }
+
+      var json  = JSON.parse(match[1]);
+      var table = json.table;
+      if (!table || !table.rows) { showError('No data in SUMMARY tab'); return; }
+
+      // Find header row — row 1 is title, row 2 is headers (index 1 in rows array)
+      // But gviz skips merged title rows, so headers may be in cols labels
+      var headers = table.cols.map(function(c){ return (c.label||'').toLowerCase().trim(); });
+
+      // If headers are empty, try first data row
+      if (!headers[0]) {
+        if (!table.rows[0]) { showError('Empty sheet'); return; }
+        headers = table.rows[0].c.map(function(c){ return c&&c.v ? c.v.toString().toLowerCase().trim() : ''; });
+        table.rows = table.rows.slice(1);
+      }
+
+      function getCol(name) {
+        for(var i=0;i<headers.length;i++){
+          if(headers[i].includes(name)) return i;
         }
+        return -1;
+      }
 
-        let state = {
-            programs: [],
-            tasks: [],
-            team: [],
-            clients: [],
-            currentTeamMember: 'all',
-            currentView: 'overview',
-            filters: { client: '', project: '', lead: '', assignee: '', status: '', search: '' }
-        };
+      var nameCol   = getCol('name');
+      var discCol   = getCol('disc');
+      var teamCol   = getCol('team');
+      var trackCol  = getCol('track');
+      var qtrCol    = getCol('quarter');
+      var yearCol   = getCol('year');
+      var wklyCol   = getCol('weekly');
+      var qcheCol   = getCol('qche_10');
+      var chCol     = getCol('client');
+      var qcompCol  = getCol('qcomplete');
+      var pctCol    = getCol('qche_%');
+      var tierCol   = getCol('tier');
+      var bonusCol  = getCol('bonus');
+      var weeksCol  = getCol('weeks');
+      var updCol    = getCol('last');
 
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            loadData();
-        });
-
-        // Data Loading
-        async function loadData() {
-            updateStatus('connecting');
-            try {
-                const [programs, tasks, team] = await Promise.all([
-                    fetchSheet(CONFIG.SHEET_ID, CONFIG.PROGRAMS_TAB),
-                    fetchSheet(CONFIG.SHEET_ID, CONFIG.TASKS_TAB),
-                    fetchSheet(CONFIG.SHEET_ID, CONFIG.TEAM_TAB)
-                ]);
-
-                // Parse and filter to EXTERNAL clients only
-                state.programs = parsePrograms(programs).filter(p => 
-                    !CONFIG.INTERNAL_CLIENTS.includes(p.client.toUpperCase())
-                );
-                state.tasks = parseTasks(tasks).filter(t => 
-                    !CONFIG.INTERNAL_CLIENTS.includes(t.client.toUpperCase())
-                );
-                state.team = parseTeam(team);
-
-                // Get unique clients
-                state.clients = [...new Set(state.programs.map(p => p.client))].filter(Boolean).sort();
-
-                // Link tasks to programs
-                state.programs.forEach(p => {
-                    p.tasks = state.tasks.filter(t => 
-                        t.programName && p.name && 
-                        t.programName.toLowerCase() === p.name.toLowerCase() &&
-                        t.client === p.client
-                    );
-                });
-
-                updateStatus('connected');
-                document.getElementById('sheet-link').href = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/edit`;
-                document.getElementById('sheet-link').style.display = 'flex';
-                showDashboard();
-            } catch (e) {
-                console.error(e);
-                updateStatus('error');
-                document.getElementById('welcome-state').innerHTML = `
-                    <h2 style="color: var(--accent-rose)">Connection Failed</h2>
-                    <p>Check that the Google Sheet is published to web.</p>
-                    <p style="font-size: 0.7rem; margin-top: 0.5rem; color: var(--accent-rose)">${e.message}</p>
-                `;
-            }
+      var found = null;
+      for(var i=0;i<table.rows.length;i++){
+        var row = table.rows[i];
+        if(!row || !row.c) continue;
+        var nameVal = row.c[nameCol] && row.c[nameCol].v ? row.c[nameCol].v.toString().trim() : '';
+        if(nameVal === MY_NAME){
+          found = {
+            name:            nameVal,
+            discipline:      row.c[discCol]  && row.c[discCol].v  ? row.c[discCol].v.toString()  : '',
+            team:            row.c[teamCol]  && row.c[teamCol].v  ? row.c[teamCol].v.toString()  : '',
+            track:           row.c[trackCol] && row.c[trackCol].v ? row.c[trackCol].v.toString() : '',
+            current_quarter: row.c[qtrCol]   && row.c[qtrCol].v   ? row.c[qtrCol].v.toString()   : '',
+            year:            row.c[yearCol]  && row.c[yearCol].v  ? row.c[yearCol].v              : 2026,
+            weekly_hrs:      row.c[wklyCol]  && row.c[wklyCol].v  ? row.c[wklyCol].v              : 0,
+            qche_100:        row.c[qcheCol]  && row.c[qcheCol].v  ? row.c[qcheCol].v              : 0,
+            client_hrs:      row.c[chCol]    && row.c[chCol].v    ? row.c[chCol].v                : 0,
+            qcompleted:      row.c[qcompCol] && row.c[qcompCol].v ? row.c[qcompCol].v             : 0,
+            qche_pct:        row.c[pctCol]   && row.c[pctCol].v   ? row.c[pctCol].v               : 0,
+            tier_status:     row.c[tierCol]  && row.c[tierCol].v  ? row.c[tierCol].v.toString()   : '',
+            total_bonus:     row.c[bonusCol] && row.c[bonusCol].v ? row.c[bonusCol].v             : 0,
+            weeks_left:      row.c[weeksCol] && row.c[weeksCol].v ? row.c[weeksCol].v             : 0,
+            last_updated:    row.c[updCol]   && row.c[updCol].v   ? row.c[updCol].v.toString()    : ''
+          };
+          break;
         }
-
-        async function fetchSheet(sheetId, name) {
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(name)}`;
-            const res = await fetch(url);
-            const text = await res.text();
-            const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
-            if (!match) throw new Error('Invalid response');
-            return JSON.parse(match[1]).table;
-        }
-
-        function getHeaders(table) {
-            const colLabels = table.cols.map(c => (c.label || '').toLowerCase()).filter(Boolean);
-            if (colLabels.length > 0) {
-                return { headers: table.cols.map(c => (c.label || '').toLowerCase()), dataRows: table.rows };
-            }
-            if (table.rows && table.rows.length > 0) {
-                const headers = table.rows[0].c.map(cell => (cell && cell.v ? String(cell.v) : '').toLowerCase());
-                return { headers, dataRows: table.rows.slice(1) };
-            }
-            return { headers: [], dataRows: [] };
-        }
-
-        function parsePrograms(table) {
-            if (!table.rows) return [];
-            const { headers, dataRows } = getHeaders(table);
-            return dataRows.map((row, i) => {
-                const get = (col) => {
-                    const idx = headers.findIndex(c => c.includes(col));
-                    return idx >= 0 && row.c[idx] ? (row.c[idx].v || row.c[idx].f || '') : '';
-                };
-                const client = get('client') || '';
-                return {
-                    id: i + 1,
-                    client: client,
-                    clientColor: getClientColor(client),
-                    name: get('program') || get('project') || get('name'),
-                    lead: get('lead') || get('owner'),
-                    team: (get('team') || '').split(',').map(s => s.trim()).filter(Boolean),
-                    startDate: get('start'),
-                    endDate: get('end') || get('target'),
-                    status: normalizeStatus(get('status')),
-                    metrics: get('metric') || get('goal'),
-                    notes: get('note'),
-                    tasks: []
-                };
-            }).filter(p => p.name && p.client);
-        }
-
-        function parseTasks(table) {
-            if (!table.rows) return [];
-            const { headers, dataRows } = getHeaders(table);
-            return dataRows.map((row, i) => {
-                const get = (col) => {
-                    const idx = headers.findIndex(c => c.includes(col));
-                    return idx >= 0 && row.c[idx] ? (row.c[idx].v || row.c[idx].f || '') : '';
-                };
-                const status = (get('status') || '').toLowerCase();
-                const assigneeRaw = get('assign') || get('owner') || '';
-                const assignees = assigneeRaw.split(',').map(a => a.trim()).filter(Boolean);
-                const categoryRaw = get('category') || get('type') || '';
-                const categories = categoryRaw.split(',').map(c => c.trim()).filter(Boolean);
-                const client = get('client') || '';
-                return {
-                    id: i + 1,
-                    client: client,
-                    clientColor: getClientColor(client),
-                    programName: get('program') || get('project'),
-                    name: get('task') || get('name'),
-                    assignee: assignees.join(', '),
-                    assignees: assignees,
-                    dueDate: get('due'),
-                    priority: (get('priority') || 'medium').toLowerCase(),
-                    category: categories.join(', ') || 'Other',
-                    categories: categories,
-                    completed: ['complete', 'completed', 'done'].includes(status),
-                    deliverables: get('deliverable') || get('link') || ''
-                };
-            }).filter(t => t.name && t.client);
-        }
-
-        function parseTeam(table) {
-            if (!table.rows) return [];
-            const { headers, dataRows } = getHeaders(table);
-            return dataRows.map((row, i) => {
-                const get = (col) => {
-                    const idx = headers.findIndex(c => c.includes(col));
-                    return idx >= 0 && row.c[idx] ? (row.c[idx].v || row.c[idx].f || '') : '';
-                };
-                const name = get('team name') || get('name');
-                if (!name) return null;
-                return { 
-                    id: i + 1, 
-                    name: name, 
-                    role: get('team role') || get('role') || get('title'),
-                    contact: get('team contact') || get('contact') || get('email') || ''
-                };
-            }).filter(t => t && t.name);
-        }
-
-        function normalizeStatus(s) {
-            s = (s || '').toLowerCase().replace(/\s+/g, '-');
-            const map = {
-                'on-track': 'on-track', 'ontrack': 'on-track', 'active': 'on-track',
-                'at-risk': 'at-risk', 'atrisk': 'at-risk', 'behind': 'at-risk',
-                'planning': 'planning', 'planned': 'planning', 'new': 'planning',
-                'completed': 'completed', 'complete': 'completed', 'done': 'completed',
-                'on-hold': 'on-hold', 'hold': 'on-hold', 'paused': 'on-hold'
-            };
-            return map[s] || 'planning';
-        }
-
-        // UI Functions
-        function updateStatus(s) {
-            const dot = document.getElementById('status-dot');
-            const txt = document.getElementById('status-text');
-            dot.className = 'status-dot';
-            if (s === 'connecting') { txt.textContent = 'Connecting...'; }
-            else if (s === 'connected') { dot.classList.add('connected'); txt.textContent = `${state.clients.length} clients connected`; }
-            else if (s === 'error') { dot.classList.add('error'); txt.textContent = 'Connection failed'; }
-            else { txt.textContent = 'Not connected'; }
-        }
-
-        function showDashboard() {
-            document.getElementById('welcome-state').style.display = 'none';
-            document.getElementById('dashboard-content').style.display = 'block';
-            populateFilters();
-            renderTeamSelector();
-            renderAll();
-        }
-
-        function renderTeamSelector() {
-            const select = document.getElementById('team-member-select');
-            const assignees = [...new Set(state.tasks.flatMap(t => t.assignees).filter(Boolean))].sort();
-            let html = '<option value="all">Everyone (All Tasks)</option>';
-            assignees.forEach(a => {
-                html += `<option value="${a}">${a}</option>`;
-            });
-            select.innerHTML = html;
-            select.value = state.currentTeamMember;
-        }
-
-        function switchTeamMember() {
-            state.currentTeamMember = document.getElementById('team-member-select').value;
-            
-            if (state.currentTeamMember !== 'all') {
-                document.getElementById('filter-assignee').value = state.currentTeamMember;
-                state.filters.assignee = state.currentTeamMember;
-            } else {
-                document.getElementById('filter-assignee').value = '';
-                state.filters.assignee = '';
-            }
-            
-            renderAll();
-        }
-
-        function populateFilters() {
-            // Clients
-            const clientSelect = document.getElementById('filter-client');
-            clientSelect.innerHTML = '<option value="">All Clients</option>' +
-                state.clients.map(c => `<option value="${c}">${c}</option>`).join('');
-            
-            updateDependentFilters();
-        }
-        
-        function updateDependentFilters() {
-            const selectedClient = document.getElementById('filter-client').value;
-            
-            // Filter programs/tasks based on selected client
-            const relevantPrograms = selectedClient 
-                ? state.programs.filter(p => p.client === selectedClient)
-                : state.programs;
-            const relevantTasks = selectedClient
-                ? state.tasks.filter(t => t.client === selectedClient)
-                : state.tasks;
-            
-            // Projects
-            const projects = [...new Set(relevantPrograms.map(p => p.name))].filter(Boolean).sort();
-            const currentProject = document.getElementById('filter-project').value;
-            document.getElementById('filter-project').innerHTML = '<option value="">All Projects</option>' +
-                projects.map(p => `<option value="${p}">${p}</option>`).join('');
-            if (projects.includes(currentProject)) {
-                document.getElementById('filter-project').value = currentProject;
-            }
-
-            // Leads
-            const leads = [...new Set(relevantPrograms.map(p => p.lead).filter(Boolean))].sort();
-            const currentLead = document.getElementById('filter-lead').value;
-            document.getElementById('filter-lead').innerHTML = '<option value="">All Leads</option>' +
-                leads.map(l => `<option value="${l}">${l}</option>`).join('');
-            if (leads.includes(currentLead)) {
-                document.getElementById('filter-lead').value = currentLead;
-            }
-
-            // Assignees
-            const assignees = [...new Set(relevantTasks.flatMap(t => t.assignees).filter(Boolean))].sort();
-            const currentAssignee = document.getElementById('filter-assignee').value;
-            document.getElementById('filter-assignee').innerHTML = '<option value="">All Assignees</option>' +
-                assignees.map(a => `<option value="${a}">${a}</option>`).join('');
-            if (assignees.includes(currentAssignee)) {
-                document.getElementById('filter-assignee').value = currentAssignee;
-            }
-        }
-
-        function applyFilters() {
-            const clientChanged = state.filters.client !== document.getElementById('filter-client').value;
-            
-            state.filters = {
-                client: document.getElementById('filter-client').value,
-                project: document.getElementById('filter-project').value,
-                lead: document.getElementById('filter-lead').value,
-                assignee: document.getElementById('filter-assignee').value,
-                status: document.getElementById('filter-status').value,
-                search: document.getElementById('search-input').value.toLowerCase()
-            };
-            
-            if (clientChanged) {
-                updateDependentFilters();
-            }
-            
-            renderAll();
-        }
-
-        function clearFilters() {
-            document.getElementById('filter-client').value = '';
-            document.getElementById('filter-project').value = '';
-            document.getElementById('filter-lead').value = '';
-            document.getElementById('filter-assignee').value = '';
-            document.getElementById('filter-status').value = '';
-            document.getElementById('search-input').value = '';
-            state.filters = { client: '', project: '', lead: '', assignee: '', status: '', search: '' };
-            updateDependentFilters();
-            renderAll();
-        }
-
-        function getFilteredData() {
-            let tasks = [...state.tasks];
-            let programs = [...state.programs];
-
-            // Filter by client
-            if (state.filters.client) {
-                tasks = tasks.filter(t => t.client === state.filters.client);
-                programs = programs.filter(p => p.client === state.filters.client);
-            }
-
-            // Filter by project
-            if (state.filters.project) {
-                tasks = tasks.filter(t => t.programName === state.filters.project);
-                programs = programs.filter(p => p.name === state.filters.project);
-            }
-
-            // Filter by lead
-            if (state.filters.lead) {
-                programs = programs.filter(p => p.lead === state.filters.lead);
-                const leadProjects = programs.map(p => p.name);
-                tasks = tasks.filter(t => leadProjects.includes(t.programName));
-            }
-
-            // Filter by assignee
-            if (state.filters.assignee) {
-                tasks = tasks.filter(t => t.assignees && t.assignees.includes(state.filters.assignee));
-            }
-
-            // Filter by status
-            const today = new Date(); today.setHours(0,0,0,0);
-            const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
-            const monthEnd = new Date(today); monthEnd.setMonth(monthEnd.getMonth() + 1);
-
-            if (state.filters.status === 'not-complete') {
-                tasks = tasks.filter(t => !t.completed);
-            } else if (state.filters.status === 'overdue') {
-                tasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today);
-            } else if (state.filters.status === 'this-week') {
-                tasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) <= weekEnd);
-            } else if (state.filters.status === 'this-month') {
-                tasks = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) <= monthEnd);
-            }
-
-            // Search
-            if (state.filters.search) {
-                const s = state.filters.search;
-                tasks = tasks.filter(t => 
-                    t.name.toLowerCase().includes(s) || 
-                    (t.assignee || '').toLowerCase().includes(s) ||
-                    t.programName.toLowerCase().includes(s) ||
-                    t.client.toLowerCase().includes(s)
-                );
-                programs = programs.filter(p => 
-                    p.name.toLowerCase().includes(s) || 
-                    (p.lead || '').toLowerCase().includes(s) ||
-                    p.client.toLowerCase().includes(s)
-                );
-            }
-
-            // Link filtered tasks to programs
-            programs.forEach(p => {
-                p.tasks = tasks.filter(t => t.programName === p.name && t.client === p.client);
-            });
-
-            return { tasks, programs };
-        }
-
-        function switchView(view) {
-            state.currentView = view;
-            document.querySelectorAll('.view-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
-            renderMainContent();
-        }
-
-        function renderAll() {
-            renderQuickStats();
-            renderMainContent();
-            renderSidebar();
-        }
-
-        function renderQuickStats() {
-            const { tasks, programs } = getFilteredData();
-            const today = new Date(); today.setHours(0,0,0,0);
-            
-            const clientCount = state.filters.client ? 1 : state.clients.length;
-            
-            document.getElementById('qs-clients').textContent = clientCount;
-            document.getElementById('qs-projects').textContent = programs.filter(p => p.status !== 'completed').length;
-            document.getElementById('qs-complete').textContent = tasks.filter(t => t.completed).length;
-            document.getElementById('qs-progress').textContent = tasks.filter(t => !t.completed).length;
-            document.getElementById('qs-overdue').textContent = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today).length;
-        }
-
-        function renderMainContent() {
-            const container = document.getElementById('content-area');
-            const { tasks, programs } = getFilteredData();
-
-            switch (state.currentView) {
-                case 'overview': renderOverviewView(container, tasks, programs); break;
-                case 'client': renderClientView(container); break;
-                case 'project': renderProjectView(container, programs); break;
-                case 'lead': renderLeadView(container, programs, tasks); break;
-                case 'assignee': renderAssigneeView(container, tasks); break;
-                case 'task': renderTaskView(container, tasks); break;
-                case 'timeline': renderTimelineView(container, tasks); break;
-            }
-        }
-
-        function renderOverviewView(container, tasks, programs) {
-            const today = new Date(); today.setHours(0,0,0,0);
-            const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + 7);
-
-            const overdue = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today)
-                                .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
-            const thisWeek = tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) >= today && new Date(t.dueDate) <= weekEnd)
-                                 .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
-
-            const title = state.currentTeamMember === 'all' ? 'Team Overview' : `${state.currentTeamMember}'s Dashboard`;
-
-            container.innerHTML = `
-                <h2 style="font-size: 1rem; margin-bottom: 1rem; color: var(--accent-gold);">${title}</h2>
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="card-header" style="cursor: default;">
-                            <div class="card-title">🚨 Overdue (${overdue.length})</div>
-                        </div>
-                        <div class="card-body" style="max-height: none;">
-                            <div class="card-tasks">${overdue.length ? overdue.map(t => renderTaskItem(t, true)).join('') : '<p style="color: var(--text-muted); padding: 0.5rem;">No overdue tasks 🎉</p>'}</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" style="cursor: default;">
-                            <div class="card-title">📅 Due This Week (${thisWeek.length})</div>
-                        </div>
-                        <div class="card-body" style="max-height: none;">
-                            <div class="card-tasks">${thisWeek.length ? thisWeek.map(t => renderTaskItem(t, false)).join('') : '<p style="color: var(--text-muted); padding: 0.5rem;">Nothing due this week</p>'}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderClientView(container) {
-            const clientsToShow = state.filters.client ? 
-                state.clients.filter(c => c === state.filters.client) : 
-                state.clients;
-
-            if (!clientsToShow.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏢</div><p>No clients found</p></div>';
-                return;
-            }
-
-            container.innerHTML = `<div class="cards-grid">${clientsToShow.map(clientName => {
-                const clientPrograms = state.programs.filter(p => p.client === clientName);
-                let clientTasks = state.tasks.filter(t => t.client === clientName);
-                
-                // Apply assignee filter
-                if (state.filters.assignee) {
-                    clientTasks = clientTasks.filter(t => t.assignees && t.assignees.includes(state.filters.assignee));
-                }
-                
-                const done = clientTasks.filter(t => t.completed).length;
-                const overdue = clientTasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length;
-                const color = getClientColor(clientName);
-                
-                return `
-                    <div class="card" data-id="client-${clientName}">
-                        <div class="card-header" onclick="toggleCard('client-${clientName}')" style="border-left: 4px solid ${color}">
-                            <div class="card-title">
-                                <span class="client-badge" style="background: ${color}20; color: ${color}">${clientName}</span>
-                            </div>
-                            <div class="card-meta">
-                                <div class="meta-item"><div class="meta-value">${clientPrograms.length}</div><div class="meta-label">Projects</div></div>
-                                <div class="meta-item"><div class="meta-value" style="color: ${overdue ? 'var(--accent-rose)' : 'var(--accent-emerald)'}">${overdue || done + '/' + clientTasks.length}</div><div class="meta-label">${overdue ? 'Overdue' : 'Tasks'}</div></div>
-                                <span class="expand-icon">▼</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-tasks">${clientTasks.filter(t => !t.completed).slice(0, 8).map(t => renderTaskItem(t, false)).join('') || '<p style="color: var(--text-muted); padding: 0.5rem;">No pending tasks</p>'}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('')}</div>`;
-        }
-
-        function renderProjectView(container, programs) {
-            if (!programs.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No projects match filters</p></div>';
-                return;
-            }
-
-            const statusLabels = { 'planning': 'Planning', 'on-track': 'On Track', 'at-risk': 'At Risk', 'on-hold': 'On Hold', 'completed': 'Completed' };
-
-            container.innerHTML = `<div class="cards-grid">${programs.map(p => {
-                const done = p.tasks.filter(t => t.completed).length;
-                const total = p.tasks.length;
-
-                return `
-                    <div class="card" data-id="project-${p.client}-${p.id}">
-                        <div class="card-header" onclick="toggleCard('project-${p.client}-${p.id}')" style="border-left: 4px solid ${p.clientColor}">
-                            <div class="card-title">
-                                <span class="client-badge" style="background: ${p.clientColor}20; color: ${p.clientColor}">${p.client}</span>
-                                ${esc(p.name)}
-                                <span class="status-badge status-${p.status}">${statusLabels[p.status] || 'Planning'}</span>
-                            </div>
-                            <div class="card-meta">
-                                <div class="meta-item"><div class="meta-value">${done}/${total}</div><div class="meta-label">Tasks</div></div>
-                                <div class="meta-item"><div class="meta-value">${p.lead || '—'}</div><div class="meta-label">Lead</div></div>
-                                <span class="expand-icon">▼</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-tasks">${p.tasks.length ? p.tasks.map(t => renderTaskItem(t, false)).join('') : '<p style="color: var(--text-muted); padding: 0.5rem;">No tasks</p>'}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('')}</div>`;
-        }
-
-        function renderLeadView(container, programs, tasks) {
-            const leads = {};
-            programs.forEach(p => {
-                if (!p.lead) return;
-                if (!leads[p.lead]) leads[p.lead] = { name: p.lead, programs: [], clients: new Set() };
-                leads[p.lead].programs.push(p);
-                leads[p.lead].clients.add(p.client);
-            });
-
-            const leadList = Object.values(leads).sort((a,b) => b.programs.length - a.programs.length);
-            
-            if (!leadList.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No leads found</p></div>';
-                return;
-            }
-
-            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185', '#2dd4bf'];
-
-            container.innerHTML = `<div class="person-grid">${leadList.map((lead, i) => {
-                const leadTasks = tasks.filter(t => lead.programs.some(p => p.name === t.programName && p.client === t.client));
-                const pending = leadTasks.filter(t => !t.completed).length;
-
-                return `
-                    <div class="person-card">
-                        <div class="person-header">
-                            <div class="person-avatar" style="background: ${colors[i % colors.length]}">${initials(lead.name)}</div>
-                            <div class="person-info">
-                                <h3>${esc(lead.name)}</h3>
-                                <div class="person-role">${[...lead.clients].join(', ')}</div>
-                            </div>
-                            <div class="person-stats">
-                                <div class="person-stat"><div class="person-stat-value" style="color: var(--accent-sky)">${lead.programs.length}</div><div class="person-stat-label">Projects</div></div>
-                                <div class="person-stat"><div class="person-stat-value" style="color: var(--accent-amber)">${pending}</div><div class="person-stat-label">Pending</div></div>
-                            </div>
-                        </div>
-                        <div class="person-tasks">${lead.programs.map(p => `<div style="font-size: 0.65rem; padding: 0.3rem 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 0.25rem; border-left: 3px solid ${p.clientColor}"><span style="color: ${p.clientColor}">${p.client}</span> · ${p.name} <span class="status-badge status-${p.status}" style="margin-left: 0.3rem">${p.status}</span></div>`).join('')}</div>
-                    </div>
-                `;
-            }).join('')}</div>`;
-        }
-
-        function renderAssigneeView(container, tasks) {
-            const assignees = {};
-            tasks.forEach(t => {
-                if (!t.assignee) return;
-                if (!assignees[t.assignee]) assignees[t.assignee] = { name: t.assignee, tasks: [], clients: new Set() };
-                assignees[t.assignee].tasks.push(t);
-                assignees[t.assignee].clients.add(t.client);
-            });
-
-            const assigneeList = Object.values(assignees).sort((a,b) => 
-                b.tasks.filter(t => !t.completed).length - a.tasks.filter(t => !t.completed).length
-            );
-
-            if (!assigneeList.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No assignees found</p></div>';
-                return;
-            }
-
-            const colors = ['#d4a853', '#34d399', '#38bdf8', '#a78bfa', '#fb7185', '#2dd4bf'];
-
-            container.innerHTML = `<div class="person-grid">${assigneeList.map((person, i) => {
-                const pending = person.tasks.filter(t => !t.completed).length;
-                const done = person.tasks.filter(t => t.completed).length;
-                const overdue = person.tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < new Date()).length;
-
-                return `
-                    <div class="person-card">
-                        <div class="person-header">
-                            <div class="person-avatar" style="background: ${colors[i % colors.length]}">${initials(person.name)}</div>
-                            <div class="person-info">
-                                <h3>${esc(person.name)}</h3>
-                                <div class="person-role">${[...person.clients].join(', ')}</div>
-                            </div>
-                            <div class="person-stats">
-                                <div class="person-stat"><div class="person-stat-value" style="color: var(--accent-amber)">${pending}</div><div class="person-stat-label">Pending</div></div>
-                                <div class="person-stat"><div class="person-stat-value" style="color: ${overdue ? 'var(--accent-rose)' : 'var(--accent-emerald)'}">${overdue || done}</div><div class="person-stat-label">${overdue ? 'Overdue' : 'Done'}</div></div>
-                            </div>
-                        </div>
-                        <div class="person-tasks">${person.tasks.filter(t => !t.completed).map(t => renderTaskItem(t, false)).join('') || '<p style="color: var(--text-muted); padding: 0.5rem;">All caught up!</p>'}</div>
-                    </div>
-                `;
-            }).join('')}</div>`;
-        }
-
-        function renderTaskView(container, tasks) {
-            if (!tasks.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><p>No tasks match filters</p></div>';
-                return;
-            }
-
-            const sorted = [...tasks].sort((a,b) => {
-                if (a.completed !== b.completed) return a.completed ? 1 : -1;
-                if (a.dueDate && b.dueDate) return new Date(a.dueDate) - new Date(b.dueDate);
-                return a.dueDate ? -1 : 1;
-            });
-
-            container.innerHTML = `<div class="cards-grid">${sorted.map(t => {
-                const isOverdue = !t.completed && t.dueDate && new Date(t.dueDate) < new Date();
-                return renderTaskItem(t, isOverdue);
-            }).join('')}</div>`;
-        }
-
-        function renderTimelineView(container, tasks) {
-            const upcoming = tasks.filter(t => t.dueDate && !t.completed).sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
-
-            if (!upcoming.length) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><p>No upcoming deadlines</p></div>';
-                return;
-            }
-
-            const byMonth = {};
-            upcoming.forEach(t => {
-                const d = new Date(t.dueDate);
-                const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, '0')}`;
-                const label = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                if (!byMonth[key]) byMonth[key] = { key, label, days: {} };
-                
-                const dayKey = d.toISOString().split('T')[0];
-                if (!byMonth[key].days[dayKey]) byMonth[key].days[dayKey] = [];
-                byMonth[key].days[dayKey].push(t);
-            });
-
-            container.innerHTML = `<div class="timeline-view">${Object.values(byMonth).sort((a,b) => a.key.localeCompare(b.key)).map(month => `
-                <div class="timeline-month">
-                    <div class="timeline-month-header">${month.label}</div>
-                    ${Object.entries(month.days).sort().map(([day, dayTasks]) => {
-                        const d = new Date(day);
-                        const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                        const isOverdue = d < new Date();
-                        return `
-                            <div class="timeline-day">
-                                <div class="timeline-day-header" style="${isOverdue ? 'color: var(--accent-rose)' : ''}">${dayLabel}</div>
-                                ${dayTasks.map(t => `
-                                    <div class="timeline-item" style="border-left: 3px solid ${t.clientColor}">
-                                        <span class="task-client" style="background: ${t.clientColor}20; color: ${t.clientColor}">${t.client}</span>
-                                        <span style="flex: 1">${esc(t.name)}</span>
-                                        <span style="color: var(--text-muted)">${esc(t.assignee || '')}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `).join('')}</div>`;
-        }
-
-        function renderTaskItem(task, isOverdue) {
-            const isSoon = !isOverdue && task.dueDate && (new Date(task.dueDate) - new Date()) < 3 * 24 * 60 * 60 * 1000;
-            
-            const deliverableLinks = task.deliverables ? task.deliverables.split(',').map((link, i, arr) => 
-                `<a href="${esc(link.trim())}" target="_blank" class="deliverable-link">📎 ${arr.length > 1 ? 'Link ' + (i+1) : 'Deliverable'}</a>`
-            ).join(' ') : '';
-            
-            return `
-                <div class="task-item ${isOverdue ? 'overdue' : ''} priority-${task.priority}" style="border-left-color: ${task.clientColor || 'var(--accent-violet)'}">
-                    <div class="task-checkbox ${task.completed ? 'completed' : ''}"></div>
-                    <div class="task-content">
-                        <div class="task-client" style="background: ${task.clientColor}20; color: ${task.clientColor}">${esc(task.client)}</div>
-                        <div class="task-project">${esc(task.programName)}</div>
-                        <div class="task-title ${task.completed ? 'completed' : ''}">${esc(task.name)}</div>
-                        <div class="task-meta">
-                            ${task.assignee ? `<span>👤 ${esc(task.assignee)}</span>` : ''}
-                            ${task.dueDate ? `<span class="task-due ${isOverdue ? 'overdue' : ''} ${isSoon ? 'soon' : ''}">📅 ${fmtDate(task.dueDate)}${isOverdue ? ' (overdue)' : ''}</span>` : ''}
-                        </div>
-                        ${task.completed && deliverableLinks ? `<div class="task-deliverables">${deliverableLinks}</div>` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderSidebar() {
-            const { tasks } = getFilteredData();
-            const today = new Date(); today.setHours(0,0,0,0);
-
-            // Deadlines
-            const upcoming = tasks.filter(t => t.dueDate && !t.completed)
-                                 .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate))
-                                 .slice(0, 6);
-            const overdueCount = upcoming.filter(t => new Date(t.dueDate) < today).length;
-            
-            document.getElementById('deadline-count').textContent = overdueCount || upcoming.length;
-            document.getElementById('deadline-count').style.background = overdueCount ? 'var(--accent-rose)' : 'var(--accent-gold)';
-            
-            document.getElementById('deadlines-list').innerHTML = upcoming.length ? upcoming.map(t => {
-                const d = new Date(t.dueDate);
-                const over = d < today;
-                return `
-                    <div class="deadline-item ${over ? 'overdue' : ''}">
-                        <div class="deadline-date">
-                            <div class="deadline-day">${d.getDate()}</div>
-                            <div class="deadline-month">${d.toLocaleDateString('en-US', { month: 'short' })}</div>
-                        </div>
-                        <div class="deadline-content">
-                            <div class="deadline-client" style="background: ${t.clientColor}20; color: ${t.clientColor}">${esc(t.client)}</div>
-                            <div class="deadline-task">${esc(t.name)}</div>
-                            <div class="deadline-meta">${esc(t.assignee || '')}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('') : '<p style="color: var(--text-muted); text-align: center; font-size: 0.7rem;">No deadlines</p>';
-
-            // Client Health
-            document.getElementById('health-list').innerHTML = state.clients.map(clientName => {
-                let clientTasks = state.tasks.filter(t => t.client === clientName);
-                if (state.filters.assignee) {
-                    clientTasks = clientTasks.filter(t => t.assignees && t.assignees.includes(state.filters.assignee));
-                }
-                const overdue = clientTasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < today).length;
-                const color = getClientColor(clientName);
-                let health = 'good', status = 'On track';
-                if (overdue > 2) { health = 'critical'; status = `${overdue} overdue`; }
-                else if (overdue > 0) { health = 'warning'; status = `${overdue} overdue`; }
-                else if (clientTasks.filter(t => !t.completed).length === 0) { status = 'All caught up'; }
-
-                return `
-                    <div class="health-item">
-                        <div class="health-logo" style="background: ${color}">${initials(clientName)}</div>
-                        <div class="health-info">
-                            <div class="health-name">${esc(clientName)}</div>
-                            <div class="health-status">${status}</div>
-                        </div>
-                        <div class="health-indicator ${health}"></div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function toggleCard(id) {
-            document.querySelector(`[data-id="${id}"]`)?.classList.toggle('expanded');
-        }
-
-        // Utils
-        function esc(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-        function fmtDate(s) { if (!s) return '—'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
-        function initials(n) { return n ? n.split(' ').map(x => x[0]).join('').toUpperCase().slice(0, 2) : '?'; }
-    </script>
+      }
+
+      if(found) render(found);
+      else showError('"'+MY_NAME+'" not found in SUMMARY tab. Check name matches exactly.');
+    })
+    .catch(function(err){
+      showError('Could not load sheet — make sure it is shared publicly. '+err.message);
+    });
+}
+</script>
 </body>
 </html>
